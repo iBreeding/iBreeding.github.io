@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>程序特点 - Genomic Breeding Machine</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u7a0b\u5e8f\u7279\u70b9";
+    var mkdocs_page_input_path = "Feature.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Genomic Breeding Machine</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">网站主页</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Quick-Start/">快速入手</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">程序特点</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#lightgbm">利用lightgbm算法做性状预测与特征筛选</a></li>
+    
+
+    <li class="toctree-l2"><a href="#tsne">引入tsne方法对基因型数据降维</a></li>
+    
+
+    <li class="toctree-l2"><a href="#optics">引入optics方法对数据聚类</a></li>
+    
+
+    <li class="toctree-l2"><a href="#snp">支持对snp基因型数据的统计</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_1">参考文献</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Tutorial/">详细教程</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Parameters/">程序参数</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Parameters-Turning/">调参建议</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../FAQ/">常见问题</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Genomic Breeding Machine</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>程序特点</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong><font size=6>程序特点</font></strong>
+<br /><br /></p>
+<p>本节详细阐述了GBM在数据处理上所使用到方法的特性，
+并简要介绍了这些方法的原理及应用于生物问题上的理论基础。
+同时将GBM所用到的方法与当前通用的处理基因型数据的方法进行了性能上的比较。
+<br /><br /></p>
+<h2 id="lightgbm">利用lightgbm算法做性状预测与特征筛选</h2>
+<p>梯度提升决策树(Gradient Boosting Decision Tree, GBDT)算法是一种迭代的决策树算法<a href="#_2">[1]</a>。
+通过构造一组弱的学习器（树），把多颗决策树的结果累加起来作为最终的输出，将决策树与集成思想进行了有效的结合。
+程序以对GBDT算法进行大量优化后的lightgbm算法<a href="#_2">[2]</a>作为性状预测的内核。</p>
+<p>与目前常用的性状预测算法rrblup相比，lightgbm算法可以在不丢失精确度的情况下：</p>
+<ul>
+<li>大幅提升预测速度</li>
+<li>大幅降低内存消耗</li>
+<li>支持质量性状预测</li>
+</ul>
+<p>以下是lightgbm算法与rrblup算法性能测试结果：</p>
+<p>根据lightgbm中的性能测试，提供测试数据信息，测试设备信息，参数信息，测试结果。
+数据集的变量：样本数，snp数。
+结果以表格和柱状图的形式呈现，
+表格格式为：data，运算时间，内存消耗，预测精确度(后三项含有二级表头(lightgbm[cpu, gup]，rrblup))。
+柱状图为双色柱状图，每种颜色分别代表lightgbm[cpu, gup]、rrblup，横坐标为data类型；
+总计3幅图，分别对应运算时间，内存消耗，预测精确度。</p>
+<p>分析一波(参考闫军师兄结论 + lightgbm格式 + 支持质量性状预测)</p>
+<p>通过提取lightgbm模型中各特征的权重，可以清晰的理解此群体中各snp与表型之间的相关性。一般snp的权重越大，与表型的相关性越强。
+利用lightgbm算法不仅可以快速、精准的完成对性状的预测，同时还可以准确的抓取与表型相关的性状。</p>
+<p>这里还想与GWAS结果进行一下比较，观察两者在结果上是否有交集。
+交集越多越好，因为GWAS方法是一个已经得到普遍认同的方法，与其交集越大，越证明抓取的结果可信。
+若交集少甚至没有，即时你用从其他角度出发的理论来解释一波，也很难让人信服。
+如果交集少，则不提GWAS；否则加入这个分析。
+<br /><br /></p>
+<h2 id="tsne">引入tsne方法对基因型数据降维</h2>
+<p>t-分布式随机邻域嵌入(t-distributed stochastic neighbor embedding, t-SNE)算法是一种用于挖掘高维数据的非线性降维算法。
+将数据点以条件概率的形式从高维映射到低维，利用t分布巧妙解决了高维数据降维带来的拥挤问题，使降维结果同时保留数据的局部和全局结构。<a href="">[3]</a></p>
+<p>PCA等线性降维算法无法确保非线性流型高维数据的数据结构在降维后可以正确映射。
+另一方面，PCA算法侧重展现数据间的不相似性。在可视化上相似为不相似让步，小差异为大差异让步，算法结果容易受到离群数据干扰。</p>
+<p>由于t-SNE算法具有二次时间和空间复杂性，对系统资源要求较高。
+程序在利用t-SNE算法降维前先通过滑窗对snp数据进行降维。
+将snp数据根据用户设定的滑窗大小分割成多组，每组snp数量与滑窗大小相同。
+以每组内各snp特征值的和作为新维度下该特征的值，达到减少系统资源消耗和增加snp特征值丰富度的目的。</p>
+<p>以下是t-SNE算法与PCA算法性能测试结果：</p>
+<p>根据lightgbm中的性能测试，提供测试数据信息，测试设备信息，参数信息，测试结果。
+数据集的变量：样本数，snp数，滑窗大小。
+结果以表格和散点图的形式呈现，
+表格格式为：data，运算时间，内存消耗，预测精确度(后三项含有二级表头(t-SNE，PCA))。
+每个结果生成两幅散点图，A图为算法降维结果，B图是在结果上用不同颜色标注出真实数据结构，观察降维能否保证数据结构。
+使用t-SNE相比PCA还需要设定滑窗大小，为了保证滑窗大小具有一定的鲁棒性，也要比较不同滑窗大小下t-SNE的降维效果。</p>
+<p>分析一波</p>
+<p>现在LargeVis的代码已经公布，LargeVis是对t-SNE的优化，大幅提升t-SNE的计算速度与精度，是16年新提出的算法
+<br /><br /></p>
+<h2 id="optics">引入optics方法对数据聚类</h2>
+<p>点排序确定簇结构(Ordering Points to identify the clustering structure, OPTICS)算法是基于密度的聚类算法。
+在数据集中寻找被低密度区域分离的高密度区域，将分离出的高密度区域划分为簇，可以发现任意形状的群体结构。
+而现阶段研究常用的K-Means算法、分层聚类算法都是基于距离的聚类算法，在群体结构为球状数据集上表现良好。
+但当数据集为非球状结构时，如瑞士卷(Swiss roll)，上述算法的聚类效果并不好。</p>
+<p>另一方面，K-Means算法要求用户预先提供聚类数。但在实际应用中，研究者可能对样本集中的群体结构并不了解。
+OPTICS算法可以根据样本集中数据分布的密集情况，自动确定聚类数，帮助用户发现群体结构并理清样本间的亲缘关系。</p>
+<p>以下是OPTICS算法与K-Means算法性能测试结果：</p>
+<p>聚类是建立在t-SNE降维结果的基础上进行的。
+根据lightgbm中的性能测试，提供测试数据信息，测试设备信息，参数信息，测试结果。
+数据集的变量：样本数，snp数。
+结果以表格和散点图的形式呈现，
+表格格式为：data，运算时间，内存消耗，预测精确度(后三项含有二级表头(OPTICS，K-Means))。
+每个数据集出3幅散点图，分别OPTICS聚类结果，K-Means聚类结果和真实群体结构，比较两种聚类算法的效果。</p>
+<p>分析一波
+<br /><br /></p>
+<h2 id="snp">支持对snp基因型数据的统计</h2>
+<p>程序的预处理模块支持对输入的snp基因型数据的样本杂合率、基因型杂合率、
+基因型频率(最小等位基因频率)、基因型缺失率、样本缺失率进行统计并以密度分布图的形式可视化。
+方便用户了解数据整体情况，制定后续的研究方法。</p>
+<p>5种统计放5张密度分布图，给用户展现一下效果。
+<br /><br /></p>
+<h2 id="_1">参考文献</h2>
+<p>[1] <a href="https://www.jstor.org/stable/2699986?seq=1#page_scan_tab_contents">Jerome H. Friedman. "Greedy Function Approximation: A Gradient Boosting Machine". 
+Annals of statistics, 2001 - JSTOR Vol. 29, No. 5 (Oct., 2001), pp. 1189-1232</a></p>
+<p>[2] <a href="https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree.pdf">Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, Tie-Yan Liu. 
+“LightGBM: A Highly Efficient Gradient Boosting Decision Tree.” 
+Advances in Neural Information Processing Systems 30 (NIPS 2017), pp. 3149-3157.</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Tutorial/" class="btn btn-neutral float-right" title="详细教程">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Quick-Start/" class="btn btn-neutral" title="快速入手"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Quick-Start/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Tutorial/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
