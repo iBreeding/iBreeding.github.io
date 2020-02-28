@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Tutorial - CropGBM</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Tutorial";
+    var mkdocs_page_input_path = "Tutorial.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> CropGBM</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Feature/">Feature</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../QuickStart/">QuickStart</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Tutorial</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#parameter-configuration">Parameter configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#genotype-data-pre-processing">Genotype data pre-processing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#pre-processing-data">Pre-processing data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#extract-specific-sampleid-and-snpid-data">Extract specific sampleID and snpID data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#recode-bed-format-data">Recode bed format data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#overall-use-of-parameters">Overall use of parameters</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#phenotype-data-pre-processing">Phenotype data pre-processing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#extract-and-visualize-specific-phenotype-data">Extract and visualize specific phenotype data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#extract-phenotype-data-by-sampleid">Extract phenotype data by sampleID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#extract-and-visualize-the-phenotype-data-by-groupid">Extract and visualize the phenotype data by groupID</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#normalize-and-visualize-phenotype-data">Normalize and visualize phenotype data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#recoding-phenotype-data-multi-classification">Recoding phenotype data (multi-classification)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#population-structure-analysis">Population structure analysis</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#pca-kmeans-analyze-and-visualize">PCA-Kmeans analyze and visualize</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#t-sne-optics-analyze-and-visualize">t-SNE-OPTICS analyze and visualize</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#compare-the-differences-between-results-and-label">Compare the differences between results and label</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#training-model-snp-selection">Training model SNP selection</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#cross-validation">Cross-validation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#training-model">Training model</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#snp-selection">SNP selection</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#phenotype-prediction">Phenotype prediction</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../Parameters/">Parameters</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">CropGBM</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Tutorial</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="tutorial">Tutorial</h1>
+<p>This section uses the command line to assign parameters to CropGBM, introduces the implementation of each function of the program in detail, and displays some results to help users configure the corresponding parameters according to the research purpose. The tutorial uses 6210 F1 offspring maize genome SNP data obtained by crossing 207 maternal and 30 paternal lines. Each sample contains 4903 SNP sites. Download address: XXX<br/><br/></p>
+<h2 id="parameter-configuration">Parameter configuration</h2>
+<p>CropGBM supports two parameter assignment forms: 'configuration file' and 'command line', of which 'configuration file' is required. CropGBM will read the values of the parameters in the configuration file first, and then read the values of the parameters in the command line. When a parameter is assigned by both methods at the same time, CropGBM uses the parameter value in the command line as a reference and ignores the parameter value in the configuration file.</p>
+<p>The configuration file is a collection of parameters and their corresponding values in one file, which is convenient for users to uniformly manage and reuse a large number of parameters. The configuration file format is as follows:</p>
+<pre><code>[preprocessed_geno]
+# boolean
+phe_norm = false
+phe_plot = true
+
+# necessary
+phefile_path = /home/xyt/GBM_test3/8652.phe
+
+# semi-necessary
+ppgroupfile_path = 
+ppgroupid_column = 
+ppgroupfile_sep =
+
+# optional
+phefile_sep = ' '
+phe_column = 13
+norm_mode = z-score
+</code></pre>
+<ul>
+<li><code>[preprocessed_geno]</code> The name of the module. The parameters below are only used when the module is called. (The parameters under the <code>[DEFAULT]</code> module can be called in other modules).</li>
+<li><code># boolean</code> Boolean parameters. When assigning, the program will execute the function corresponding to the parameter. Otherwise, the program will not execute the corresponding function.</li>
+<li><code># necessary</code> Necessary parameters. If the parameter is not assigned a value, an error will be reported when calling the module.</li>
+<li><code># semi-necessary</code> Semi-necessary parameters, If the parameter is not assigned, an error will be reported when calling specific function.</li>
+<li><code># optional</code> optional parameters, If the parameter is not assigned, certain functions cannot be used, but no error is reported.</li>
+</ul>
+<p>For the convenience of users, the program contains a configuration file named configfile.params after decompression. By modifying the configuration file, users can quickly and massively assign values to parameters. Parameters weith default values have been assigned default values in the configuration file, such as norm_mode=z-score. Usrs can also change the parameter values according to their needs. When the parameter value is empty, None, false, False, if the parameter contains the default value, the default value will be used, otherwise the program thinks that this parameter has not been assigned a value.<br/><br/></p>
+<h2 id="genotype-data-pre-processing">Genotype data pre-processing</h2>
+<ul>
+<li>Screen out non-compliant sample individuals and SNP sites based on deletion rate and MAF</li>
+<li>Fill missing SNP data based on high frequency genotypes</li>
+<li>Remove redundant SNP according to r ^ 2</li>
+<li>Genotype data recoding (genotype -&gt; 012)</li>
+<li>Extract specific genotype data of specific samples based on SNPID or sampleID</li>
+<li>Visualization of heterozygosity, deletion, and frequency distribution of MAF for genotype data</li>
+</ul>
+<p>CropGBM calls PLINK to complete part of the pre-processing of the genotype data, and provides identifiable file formats and data for downstream analysis. CropGBM will create a folder named preprocessed under the output path specified by the user, and store the output files in this directory.</p>
+<p><strong>Input:</strong> ped, bed, vcf, bcf format files <br/>
+<strong>Output:</strong> filename_filter.bed / bim / fam / ped / map, filename.log / prune.in / .prune.out / frqx / imiss / irem / lmiss, filename_filter.geno, filename_maf / het / imiss / lmiss.pdf <br/><br/></p>
+<h3 id="pre-processing-data">Pre-processing data</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg all --fileprefix genofile --fileformat vcf --snpmaxmiss 0.10 --samplemaxmiss 0.10 --maf_max 0.05 --r2_cutoff 0.7</em></p>
+<p><code>-c</code> Configuration file path: configfile.params<br/>
+<code>-o</code> Output path of program running result: gbm_result/<br/>
+<code>-pg</code> Call preprocessed genotype data module, optional values [all, filter]. The 'all' indicates that the program will call the complete pre-processing module, including: statistical and visual data basics, screening out non-compliant sample individuals and SNP sites based on the deletion rate, MAF, and filling the missing data of SNP based on high-frequency genotypes, removing redundant SNP according to r ^ 2, extracting specific genotype data function of specific sample according to SNPID or sampleID. The 'filter' indicates that the program will call part of the preprocessing module, which only includes the specific extraction of specific samples according to SNPID or sampleID: all<br/>
+<code>--fileprefix</code> Genotype data file name prefix: genofile<br/>
+<code>--fileformat</code> Genotype data file format, optional values [ped, bed, vcf, bcf]: vcf<br/>
+<code>--snpmaxmiss</code> SNP maximum deletion rate. SNP whose deletion rate exceeds this threshold will be eliminated. Default is 0.05: 0.10<br/>
+<code>--samplemaxmiss</code> Sample maximum missing rate. Samples whose missing rate exceeds this threshold will be rejected. Default is 0.05: 0.10<br/>
+<code>--maf_max</code> Minimum allele frequency. SNP whose minimum allele frequency is less than this threshold will be eliminated. Default is 0.01: 0.05<br/>
+<code>--r2_cutoff</code> Equivalent to the --indep-pairwise parameter in PLINK. Default is 0.8: 0.7<br/></p>
+<p>Output files genofile_filter.bed / bim / fam / ped / map, genofile.frqx / imiss / irem / lmiss / prune.in / prune.out, filename_maf / het / imiss / lmiss.pdf:</p>
+<p><code>genofile_filter.bed/bim/fam</code> bed format file, and the encoding method of the genotype is ATCG-&gt; 013 (minor-&gt; 0, major-&gt; 1, miss-&gt; 3), which prepares for subsequent re-encoding into additive encoding. Because PLINK can quickly read and process bed files, such files can be used as intermediate files for generating training, test, and validation sets.<br/>
+<code>genofile_filter.ped/map</code> ped format file for genotype re-encoding (-&gt; 012), and the encoding method of the genotype is ATCG-&gt; 01, preparing for subsequent re-encoding into additive encoding (minor-&gt; 0, major-&gt; 1 , Miss-&gt; 3).<br/>
+<code>genofile.frqx</code> contains the number of each genotype per SNP locus. <br/>
+<code>genofile_het.pdf</code> SNPs heterozygosity distribution histogram. The horizontal axis is the SNP heterozygosity, and the vertical axis is the number of SNP in the interval. (fig 1) <br/>
+<code>genofile_maf.pdf</code> SNPs MAF distribution histogram. The horizontal axis is the minimum allele frequency of SNP, and the vertical axis is the number of SNP in the interval. <br/>
+<code>genofile.imiss</code> contains the missing rate of each sample. <br/>
+<code>genofile_imiss.pdf</code> Histogram of sample missing rate distribution. The horizontal axis is the sample missing rate, and the vertical axis is the number of samples in the interval. <br/>
+<code>genofile.irem</code> contains the sampleID that was rejected because the missing rate exceeded the threshold. <br/>
+<code>genofile.lmiss</code> contains the missing rate of each SNP site. <br/>
+<code>genofile_lmiss.pdf</code> Histogram of SNP missing rate distribution. The horizontal axis is the SNP deletion rate, and the vertical axis is the number of SNP in the interval. <br/>
+<code>genofile.prune.in / prune.out</code> SNPid retained (.prune.in) / removed (.prune.out) after indep <br/>
+<code>genofile_plink.log</code> The log file output when the program calls PLINK. <br/>
+<code>genofile_preprocessed.log</code> Standard output when the program calls PLINK. <br/></p>
+<p><img alt="fig 1" src="../img/gene_het.png" title="fig 1" />
+<center>fig 1</center><br/><br/></p>
+<h3 id="extract-specific-sampleid-and-snpid-data">Extract specific sampleID and snpID data</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg filter --fileprefix genofile --keep-sampleid-path ksampleid_file.txt --extract-snpid-path ksnpid_file.txt</em></p>
+<p><code>--keep-sampleid-path</code> sampleID file path. It can only identify files whose separator is a space or a tab. Read the first two columns of data (the first column is familyID and the second column is within-familyID). Extract the sample based on the sampleID in the file: ksampleid_file.txt <br/>
+<code>--extract-snpid-path</code> snpID file path, extract snp according to the snpID in the file: ksnpid_file.txt <br/></p>
+<p>_ $ cropgbm -c configfile.params -o gbm_result / -pg filter --fileprefix genofile --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt_</p>
+<p><code>--remove-sampleid-path</code> sampleID file path. It can only identify files with spaces or tabs. Read the first two columns of data (the first column is familyID and the second column is within-). Remove samples based on the sampleID in the file: rsampleid_file.txt <br/>
+<code>--exclude-snpid-path</code> snpID file path, remove snp according to the snpID in the file: rsnpid_file.txt <br/></p>
+<p><strong>Note:</strong> The input file in <code>-pg filter</code> mode only accepts bed format files. It is designed to generate the training set, test set, validation set, etc. from the bed intermediate files generated in all mode according to different requirements. <br/> <br/></p>
+<h3 id="recode-bed-format-data">Recode bed format data</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg filter --fileprefix genofile --recode --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt</em></p>
+<p><code>--recode</code> Change the encoding method of genotype data to additive encoding, the change rules are: 00-&gt; 0, 01-&gt; 1, 10-&gt; 1, 11-&gt; 2</p>
+<p>The output file is genofile_filter.bed / bim / fam / ped / map / geno:</p>
+<p><code>genofile_filter.bed / bim / fam / ped / map</code> is the output file after filter <br/>
+<code>genofile_filter.geno</code> is the re-encoded output file, the sampleID is within-familyID in the ped file <br/> <br/></p>
+<h3 id="overall-use-of-parameters">Overall use of parameters</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg all --fileprefix genofile --fileformat ped --snpmaxmiss 0.10 --snpmaxmiss 0.10 --maf_max 0.05 --r2_cutoff 0.7 --recode --keep-sampleid-path ksampleid_file.txt --extract-snpid-path ksnpid_file.txt</em></p>
+<p>The output files are filename_filter.bed / bim / fam / ped / map, filename.prune.in/.prune.out/frqx/imiss/irem/lmiss, filename_filter.geno, filename_maf / het / imiss / lmiss.pdf</p>
+<p><strong>Note:</strong> The above parameters except <code>-c</code> and<code>-pg</code> can be set in the configuration file and omitted on the command line. <br/> <br/></p>
+<h2 id="phenotype-data-pre-processing">Phenotype data pre-processing</h2>
+<ul>
+<li>Extract specific sample phenotype data based on sampleID or groupID</li>
+<li>Phenotype data normalization</li>
+<li>Visualization of phenotype data distribution</li>
+<li>Phenotype data re-encoding (multi-classification problem)</li>
+</ul>
+<p>CropGBM uniformly stores the output files in the preprocessed folder under the user-specified save path.</p>
+<p><strong>Input:</strong> phenotype data with at least two columns. The program treats the first column of data as a sampleID. <br/>
+<strong>Output:</strong> phefile.phe, phefile.phenorm, phefile_groupN.phe, phefile_groupN.phenorm, phefile.numphe, phefile.wordphe, phefile.word2num, phefile_scatter.pdf, phefile_plotdd.pdf <br/> <br/></p>
+<h3 id="extract-and-visualize-specific-phenotype-data">Extract and visualize specific phenotype data</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 2</em></p>
+<p><code>-pp</code> Call the preprocessed phenotype data module. <br/>
+<code>--phe-plot</code> Calls phenotype data visualization functions. <br/>
+<code>--phefile-path</code> Phenotype data file path: phefile. <br/>
+<code>--phefile-header</code> The phenotype data file contains headers. <br/>
+<code>--phefile-sep</code> Phenotype data file separator. Default is ',': ',' <br/>
+<code>--phe-column</code> The column index in the phenotype data file that stores phenotype information. This parameter is only called when the number of columns in the phenotype file is greater than 2. Default is 2: 2</p>
+<p>The output files are phefile.phe, phefile_plotdd.pdf:</p>
+<p><code>phefile.phe</code> is the output file for the extracted specific phenotype data. The file has a total of two columns (sampleID, phenotype value), including the header. <br/>
+<code>phefile_plotdd.pdf</code> Phenotype data distribution histogram. The abscissa is the phenotype value, and the ordinate is the number. (fig 2) <br/></p>
+<p><img alt="fig 2" src="../img/phe_orgin_all_dd.png" />
+<center>fig 2</center><br/><br/></p>
+<h3 id="extract-phenotype-data-by-sampleid">Extract phenotype data by sampleID</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 2 --ppexsampleid-path ppexsampleid.txt</em></p>
+<p><code>--ppexsampleid-path</code> sampleID file path. The file content requirement is only a list of sampleID. The program extracts the phenotype data of the corresponding sample in the phenotype data file according to the sampleID in the file: ppexsampleid.txt</p>
+<p>The output file is phefile.phe:</p>
+<p><code>phefile.phe</code> is an output file that extracts specific sample phenotype data based on the sampleID. <br/> <br/></p>
+<h3 id="extract-and-visualize-the-phenotype-data-by-groupid">Extract and visualize the phenotype data by groupID</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-sep ',' --phe-column 2 --ppgroupfile-path phefile.txt --ppgroupfile-sep ',' --ppgroupid-column 3 --ppgroupfile-header</em></p>
+<p><code>--ppgroupfile-path</code> GroupID data file path: phefile.txt <br/>
+<code>--ppgroupfile-header</code> GroupID data file contains headers. <br/>
+<code>--ppgroupfile-sep</code> GroupID data file separator. Default is ',' :, <br/>
+<code>--ppgroupid-column</code> The column index where groupID information is stored in the groupID data file. This parameter is only used when the number of ppgroupfile columns is greater than 2. Default is 2: 3</p>
+<p>The output files are phefile_groupN.phe, phefile_scatter.pdf:</p>
+<p><code>phefile_groupX.phe</code> is an output file that extracts phenotype data of the same group of samples according to the groupID of the sample, where X is the groupID of the sample. Generate a total of N files, each file contains only the sample belonging to the groupX and its phenotype data, where N is the number of groups. <br/>
+<code>phefile_scatter.pdf</code> displays the distribution of phenotype data in each group in the form of scatter plots and boxplots. The abscissa is the groupID and the ordinate is the phenotype value. Each point represents a sample. (fig 3) <br/></p>
+<p><img alt="fig 3" src="../img/phe_orgin_group_scatter.png" />
+<center>fig 3</center><br/><br/></p>
+<h3 id="normalize-and-visualize-phenotype-data">Normalize and visualize phenotype data</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-sep ',' --phe-column 2 --ppgroupfile-path phefile.txt --ppgroupfile-sep ',' --ppgroupid-column 3 --ppgroupfile-header --phe_norm --norm-mode z-score</em></p>
+<p><code>--phe_norm</code> calls the phenotype data normalization function. <br/>
+<code>--norm-mode</code> Normalization algorithm, optional values [0-1, max-min, z-score]. Default is z-score: z-score</p>
+<p>The output files are phefile_groupN.phenorm, phefile_scatter.pdf:</p>
+<p><code>phefile_groupX.phenorm</code> is an output file after extracting and normalizing the phenotype data of the same group of samples according to the groupID of the sample, where X is the groupID of the sample. Generate a total of N files, each file contains only the sample belonging to the groupX and its phenotype data, where N is the number of groups of samples <br/>
+<code>phefile_scatter.pdf</code> shows the distribution of normalized phenotype data in each group in the form of scatter plots and boxplots. The abscissa is the groupID, and the ordinate is the phenotype value. Each point represents a sample. (fig 4)</p>
+<p><img alt="fig 4" src="../img/phe_norm_group_scatter.png" />
+<center>fig 4</center><br/><br/></p>
+<h3 id="recoding-phenotype-data-multi-classification">Recoding phenotype data (multi-classification)</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-recode word2num --phefile-path phefile.txt --phefile-sep ',' --phe-column 2</em></p>
+<p><code>--phe-recode</code> Calls the phenotype data recoding function, optional values​[word2num, num2word]. Word2num means re-encoding phenotype data into continuous non-negative integer form, and num2word means re-encoding continuous non-negative integer form into phenotype data (requires conversion table of integer and phenotype). When performing classification tasks, LightGBM only accepts consecutive integers with example labels [0, N). If the training sample comes from 5 groups, [0, 1, 2, 3, 4] is required as the label of the 5 groups, but this usually does not match the actual group name. Using this parameter, the program can implement a reversible conversion between sample labels and [0, N) consecutive integers. Provide compatible phenotype data for downstream classification tasks: word2num</p>
+<p>The output files are phefile.numphe, phefile.word2num:</p>
+<p><code>phefile.numphe</code> is an output file that recodes phenotype data into consecutive non-negative integers. Because LightGBM requires the coding form of each category to be a continuous non-negative integer starting from 0 when predicting classification problems, the actual phenotype data is difficult to meet this requirement. The program uses the phenotype data re-encoding function to achieve the above conversion. <br/>
+<code>phefile.word2num</code> is a correspondence file between phenotype data and continuous non-negative integer encoding.</p>
+<p>_ $ cropgbm -c configfile.params -o gbm_result / -pp --phe-recode num2word -num2wordfile-path phefile.word2num --phefile-path phefile.txt --phefile-sep ',' --phe-column 2_</p>
+<p><code>--num2wordfile-path</code> Integer and phenotype corresponding to the conversion table file path. This parameter is only used when <code>--phe-recode = num2word</code>: phefile.word2num</p>
+<p>The output file is phefile.wordphe:</p>
+<p><code>phefile.wordphe</code> is an output file that recodes consecutive non-negative integers into phenotype data</p>
+<p>Note: The re-encoding function is mainly used to transform phenotype data when predicting classification problems. Word2num is commonly used to convert the phenotype data of the training set samples into a format that can be processed by the program, and num2word is often used to convert the prediction results of the test set into the original phenotype data format. <br/> <br/></p>
+<h2 id="population-structure-analysis">Population structure analysis</h2>
+<ul>
+<li>Analysis of population structure based on genotype data</li>
+</ul>
+<p><strong>Input</strong>: genotype data<br/>
+<strong>Output</strong>: filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf <br/> <br/></p>
+<h3 id="pca-kmeans-analyze-and-visualize">PCA-Kmeans analyze and visualize</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path filename_filter.geno --structure_plot --redim-mode pca --pca-explained-var 0.98 --cluster-mode kmeans --n-clusters 30</em></p>
+<p><code>-s</code> Calls the population structure analysis module. <br/>
+<code>--genofile-path</code> The path of the genotype data file, often the preprocessed result is used as input: filename_filter.geno <br/>
+<code>--structure-plot</code> Calls the population structure plot function. A total of 2 (3) scatter plots are displayed showing the results of dimensionality reduction and clustering. <br/>
+<code>--redim-mode</code> Dimension reduction algorithm, optional value [tsne, pca]. Default is pca: pca <br/>
+<code>--pca-explained-var</code> The parameter value is an integer greater than 1 or a decimal value between 0-1. When the parameter value is an integer, it indicates the dimension of the data after pca dimensionality reduction; when the parameter value is a decimal, it indicates the amount of variation that can be explained by the data after pca dimensionality reduction. This parameter is only used when <code>--redim-mode = pca</code>. Default is 0.95: 0.98 <br/>
+<code>--cluster-mode</code> Clustering algorithm, optional value [kmeans, optics]. Default is kmeans: kmeans <br/>
+<code>--n-clusters</code> The number of clusters. This parameter is only used when <code>--cluster-mode = kmeans</code>: 30 (Because it is known that the dataset is obtained by crossing 207 fathers with 30 mothers)</p>
+<p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf:</p>
+<p><code>filename.cluster</code> is the output file for the clustering results. The content is two columns: sampleID, groupID. Where the groupID is '-1' means this sample is not clustered. <br/>
+<code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. (fig 5) <br/>
+<code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groupID indicated by different colors. (fig 6) <br/></p>
+<p><img alt="fig 5" src="../img/6210_4903snp_pca_redim.png" /> 
+<center>fig 5</center></p>
+<p><img alt="fig 6" src="../img/6210_4903snp_pca_kmeans.png" />
+<center>fig 6</center><br/><br/></p>
+<h3 id="t-sne-optics-analyze-and-visualize">t-SNE-OPTICS analyze and visualize</h3>
+<p>The t-SNE and OPTICS algorithms are more suitable for data set with unknown population categories. PCA and Kmeans algorithms are recommended when the number of population groups is known.</p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path filename_filter.geno --structure_plot --redim-mode tsne --window-size 50 --tsne-dim 2 --cluster-mode optics --optics-min-sample 0.025 --optics-xi 0.01 --optics-min-cluster-size 0.03</em></p>
+<p><code>--window-size</code> Sliding window size in dimension reduction. Since the calculation speed of the t-SNE algorithm decreases significantly with increasing dimensions, the program performs a preliminary dimensionality reduction on the data by sliding windows. When the number of snp is small, the parameters have a greater impact on the dimensionality reduction results. It is recommended to reduce the parameter value as the number of snp decreases. Default is 20. This parameter is only used when <code>--redim-mode = tsne</code>: 50 <br/>
+<code>--tsne-dim</code> Dimension of data after dimension reduction of t-SNE algorithm. This parameter is only used when <code>--redim-mode = tsne</code>. Default is 2: 2 <br/>
+<code>--optics-min-samples</code> The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the minimum number of samples required to form the core point; when the parameter value is a decimal number, it indicates the ratio of the minimum number of samples required to form the core point to the total sample number. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.025: 0.05 <br/>
+<code>--optics-xi</code> Minimum value of the reachable distance gradient required for clustering. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.05: 0.05. <br/>
+<code>--optics-min-cluster-size</code> The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the minimum number of samples required for the aggregation. When the parameter value is a decimal number, it indicates the ratio of the minimum number of samples required for the aggregation to the total number of samples. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.03: 0.06 <br/></p>
+<p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf:</p>
+<p><code>filename.cluster</code> Output file for the clustering results. The content is two columns: sampleID, groupID. A groupID of '-1' indicates that this sample is not clustered. <br/>
+<code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. (fig 7) <br/>
+<code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groupIDs indicated by different colors. (fig 8) <br/>
+<code>filename_reachability.pdf</code> displays the reachable distance between each sample in the form of a scatter plot, which is only output when<code>--redim-mode = tsne</code>. Different categories are represented by different colors, and discrete points are represented by black. (fig 9) <br/></p>
+<p><img alt="fig 7" src="../img/6210_4903snp_tsne2.png" /> 
+<center>fig 7</center></p>
+<p><img alt="fig 8" src="../img/6210_4903snp_tsne2_optics.png" />
+<center>fig 8</center></p>
+<p><img alt="fig 9" src="../img/6210_4903snp_tsne2_reachability.png" />
+<center>fig 9</center><br/><br/></p>
+<h3 id="compare-the-differences-between-results-and-label">Compare the differences between results and label</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path filename_filter.geno --structure_plot --redim-mode tsne --window-size 50 --tsne-dim 2 --cluster-mode optics --optics-min-sample 0.025 --optics-xi 0.01 --optics-min-cluster-size 0.03 --sgroupfile-path phefile.txt --sgroupfile-sep ',' --sgroupid-column 3 --sgroupfile-header</em></p>
+<p><code>--sgroupfile-path</code> Group label data file path: phefile.txt <br/>
+<code>--sgroupfile-sep</code> Group label data file separator: ',' <br/>
+<code>--sgroupfile-column</code> The column index in the group label data file that stores group label information. This parameter is only used when the number of --sgroupfile-path file columns is greater than 2: 3 <br/>
+<code>--sgroupfile-header</code> The group label data file file contains headers. <br/></p>
+<p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf:</p>
+<p><code>filename.cluster</code> Output file for the clustering results. The content is two columns: sampleID, groupID. A groupID of '-1' indicates that this sample is not clustered. <br/>
+<code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. When the parameter <code>--sgroupfile-path</code> is assigned, the program will mark the true labels of each sample on the basis of the dimensionality reduction map, and different group are indicated by different colors. (fig 10) <br/>
+<code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groups indicated by different colors. (fig 11) <br/>
+<code>filename_reachability.pdf</code> displays the reachable distance between each sample in the form of a scatter plot, which is only output when<code>--redim-mode=tsne</code>. Different groups are represented by different colors. The discrete points are represented by black. <br/></p>
+<p><img alt="fig 10" src="../img/6210_4903snp_ws5_tsne2_label.png" /> 
+<center>fig 10</center></p>
+<p><img alt="fig 11" src="../img/6210_4903snp_ws5_tsne2_xi001.png" /> 
+<center>fig 11</center><br/><br/></p>
+<h2 id="training-model-snp-selection">Training model SNP selection</h2>
+<ul>
+<li>Training model</li>
+<li>SNP selection</li>
+</ul>
+<p><strong>Input</strong>: genotype data, phenotype data <br/>
+<strong>Output</strong>: filename.lgb_model, filename_bygain.pdf, filename_random.pdf, filename_heatmap.pdf</p>
+<p>The program allows the user to modify some parameters in the LightGBM algorithm according to the research purpose. But because there are many parameters, this tutorial does not introduce them. For related content, please refer to: Program parameters&gt; SNP selection and phenotype prediction &gt; <a href="../Parameters/#lightgbm-parameters">LightGBM parameter</a> <br/> <br/></p>
+<h3 id="cross-validation">Cross-validation</h3>
+<p>During model training, if there is no validation set to help determine whether the model is overfitting, it is recommended to use <code>-cv</code> to determine a reasonable number of trainings.</p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -cv --traingeno train1.geno --trainphe train1.phe --cv-nfold 5 --min-detal 0.5</em></p>
+<p><code>-e</code> Call the SNP selection and phenotype prediction module. <br/>
+<code>-cv</code> Call the cross-validation function. <br/>
+<code>--traingeno</code> Training set genotype data file path. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. This parameter is used when <code>-t</code> or<code>-cv</code> is specified: train1.geno <br/>
+<code>--trainphe</code> Path to the training set sample phenotype data file. The file separator is ',', including the header, and the first column is the sampleID information. This parameter is used when <code>-t</code> or<code>-cv</code> is specified: train.phe <br/>
+<code>--cv-nfold</code> Number of folds per cross-validation. Default is 5: 5 <br/>
+<code>--min-detal</code> The minimum percentage improvement in model accuracy per training. The program returns the number of times the model is trained when the accuracy is less than this threshold and the accuracy of the model's cross-validation at this time. When <code>objective = regression</code>, the accuracy is the mean of the mse between the predicted result and the true value. Default is 0.5: 0.5 <br/> <br/></p>
+<h3 id="training-model">Training model</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -t --traingeno train1.geno --trainphe train1.phe --validgeno valid.geno --validphe valid.phe</em></p>
+<p><code>-t</code> Call the training model function <br/>
+<code>--validgeno</code> Path to the validation set genotype data file. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. : Valid.geno <br/>
+<code>--validphe</code> The file path of the sampleID in the validation set. The file separator is ',', including the header, the first column is the sampleID: valid.phe</p>
+<p>_ $ cropgbm -c configfile.params -o gbm_result / -e -t --traingeno train2.geno --trainphe train2.phe --validgeno valid.geno --validphe valid.phe --init-model-path train1.lgb_model_</p>
+<p><code>--init-model-path</code> Path to the starting model file. The LightGBM algorithm will continue to train based on this model. Commonly used for batch training of big data: train1.lgb_model</p>
+<p>Output file: train1.lgb_model</p>
+<p><code>train1.lgb_model</code> Model file. The tree structure of each training and the gain value of each node are recorded.</p>
+<p>Note: The program recognizes different snp by sequence, not by column name. If the snp of the same index column is different between the two data sets, the program cannot recognize it. Therefore, the training set, test set, and validation set need to be consistent in the order of snp, otherwise the prediction result is non-reference. <br/> <br/></p>
+<h3 id="snp-selection">SNP selection</h3>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -t -sf --bygain-boxplot --traingeno train1.geno --trainphe train1.phe --gain-min 0.05 --colorbar-max 0.6 --cv-times 6</em></p>
+<p><code>-sf</code> Call the SNP selection function. This function is designed to be used in conjunction with the training model function (<code>-t</code>) and cannot be used alone. <br/>
+<code>--bygain-boxplot</code> Draws a boxplot that keeps changing as the SNP joins the model. This parameter is used when <code>-sf</code>. <br/>
+<code>--gain-min</code> calculates the total gain of each SNP in the model and uses the product of the maximum gain and<code>--gain-min</code> as the threshold. When the total gain of SNP in the model is less than the threshold, this SNP will not be selected. Default is 0.05: 0.05 <br/>
+<code>--colorbar-max</code> The product of the maximum gain of each SNP in each tree and <code>--colorbar-max</code> will be used as the maximum value of colorbar in the heat map. Default is 0.6: 0.6 <br/>
+<code>--cv-times</code> Number of repetitions for cross-validation. Default is 5: 6 <br/></p>
+<p>Output files: train1.lgb_model, train1.feature, train1_bygain.pdf, train1_random.pdf, train1_heatmap.pdf</p>
+<p><code>train1.lgb_model</code> The model file. The tree structure of each training and the gain value of each node are recorded. <br/>
+<code>train1.feature</code> The SNP gain file. The gain value of each SNP in each decision tree is recorded. <br/>
+<code>train1_bygain.pdf</code> Shows the change of model error with the addition of SNP in the form of a scatter plot. The program repeated the 5-fold cross-validation on the training set using the added SNP. The x-axis coordinate in the figure is the new snpID added in each model, which is added in order from the largest featureGain_sum value of the SNP in the train1.feature file. The y-axis coordinate is the prediction error. (fig 12) <br/>
+<code>train1_random.pdf</code> shows the change of model error with the addition of SNP in the form of boxplots. The x-axis in the figure is the number of SNP used by the model. Since the SNP used in each cross-validation is randomly extracted from all SNP, there is no snpID. The y-axis is the prediction error. (fig 13) <br/>
+<code>train1_heatmap.pdf</code> displays the gain value and change rule of each SNP in different decision tree in the form of a heatmap, that is, the information in the train1.feature file. The x-axis coordinates in the figure are the number of the SNP, and they are arranged according to the featureGain_sum value of the SNP in the train1.feature file. The y-axis coordinate is the decision tree number, and the number represents the number of times the model is trained (for example, tree20 represents the decision tree generated by the 20th training). (fig 14)</p>
+<p><img alt="fig 12" src="../img/6210_4903snp_bygain.png" /> 
+<center>fig 12</center></p>
+<p><img alt="fig 13" src="../img/6210_4903snp_random.png" /> 
+<center>fig 13</center></p>
+<p><img alt="fig 14" src="../img/6210_4903snp_heatmap.png" /> 
+<center>fig 14</center><br/><br/></p>
+<h2 id="phenotype-prediction">Phenotype prediction</h2>
+<ul>
+<li>Phenotype prediction</li>
+</ul>
+<p><strong>Input</strong>: genotype data, model files <br/>
+<strong>Output</strong>: filename.predict</p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -p --testgeno test.geno --modelfile-path train1.lgb_model</em></p>
+<p><code>-p</code> Call phenotype prediction function. <br/>
+<code>--testgeno</code> Path of the test set genotype data file. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. This parameter is used when <code>-p</code> is specified: test.geno <br/>
+<code>--modelfile-path</code> The path of the LightGBM model file. The program uses this model to complete the phenotype prediction of the test set. This parameter is used when <code>-p</code> is specified: train1.lgb_model</p>
+<p>Output file filename.predict:</p>
+<p><code>filename.predict</code> Output file of the prediction result.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Parameters/" class="btn btn-neutral float-right" title="Parameters">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../QuickStart/" class="btn btn-neutral" title="QuickStart"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../QuickStart/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Parameters/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
