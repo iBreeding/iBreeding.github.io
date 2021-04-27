@@ -173,12 +173,12 @@ norm_mode = z-score
 <p><strong>Input:</strong> ped, bed, vcf, bcf format files <br/>
 <strong>Output:</strong> filename_filter.bed / bim / fam / ped / map, filename.log / prune.in / .prune.out / frqx / imiss / irem / lmiss, filename_filter.geno, filename_maf / het / imiss / lmiss.pdf <br/><br/></p>
 <h3 id="pre-processing-data">Pre-processing data</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg all --fileprefix genofile --fileformat vcf --snpmaxmiss 0.10 --samplemaxmiss 0.10 --maf-max 0.05 --r2-cutoff 0.7</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg all --fileprefix genofile --fileformat ped --snpmaxmiss 0.10 --samplemaxmiss 0.10 --maf-max 0.05 --r2-cutoff 0.7</em></p>
 <p><code>-c</code> Configuration file path: configfile.params<br/>
 <code>-o</code> Output path of program running result: gbm_result/<br/>
 <code>-pg</code> Call preprocessed genotype data module, optional values [all, filter]. The 'all' indicates that the program will call the complete pre-processing module, including: statistical and visual data basics, screening out non-compliant sample individuals and SNP sites based on the deletion rate, MAF, and filling the missing data of SNP based on high-frequency genotypes, removing redundant SNP according to r ^ 2, extracting specific genotype data function of specific sample according to SNPID or sampleID. The 'filter' indicates that the program will call part of the preprocessing module, which only includes the specific extraction of specific samples according to SNPID or sampleID: all<br/>
 <code>--fileprefix</code> Genotype data file name prefix: genofile<br/>
-<code>--fileformat</code> Genotype data file format, optional values [ped, bed, vcf, bcf]: vcf<br/>
+<code>--fileformat</code> Genotype data file format, optional values [ped, bed, vcf, bcf]: ped<br/>
 <code>--snpmaxmiss</code> SNP maximum deletion rate. SNP whose deletion rate exceeds this threshold will be eliminated. Default is 0.05: 0.10<br/>
 <code>--samplemaxmiss</code> Sample maximum missing rate. Samples whose missing rate exceeds this threshold will be rejected. Default is 0.05: 0.10<br/>
 <code>--maf-max</code> Minimum allele frequency. SNP whose minimum allele frequency is less than this threshold will be eliminated. Default is 0.01: 0.05<br/>
@@ -200,19 +200,19 @@ norm_mode = z-score
 <p><img alt="fig 1" src="../img/gene_het.png" title="fig 1" />
 <center>fig 1</center><br/><br/></p>
 <h3 id="extract-specific-sampleid-and-snpid-data">Extract specific sampleID and snpID data</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg filter --fileprefix genofile --keep-sampleid-path ksampleid_file.txt --extract-snpid-path ksnpid_file.txt</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg filter --fileprefix genofile_filter --keep-sampleid-path ksampleid_file.txt --extract-snpid-path ksnpid_file.txt</em></p>
 <p><code>--keep-sampleid-path</code> sampleID file path. It can only identify files whose separator is a space or a tab. Read the first two columns of data (the first column is familyID and the second column is within-familyID). Extract the sample based on the sampleID in the file: ksampleid_file.txt <br/>
 <code>--extract-snpid-path</code> snpID file path, extract snp according to the snpID in the file: ksnpid_file.txt <br/></p>
-<p><em>$ cropgbm -c configfile.params -o gbm_result / -pg filter --fileprefix genofile --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result / -pg filter --fileprefix genofile_filter --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt</em></p>
 <p><code>--remove-sampleid-path</code> sampleID file path. It can only identify files with spaces or tabs. Read the first two columns of data (the first column is familyID and the second column is within-). Remove samples based on the sampleID in the file: rsampleid_file.txt <br/>
 <code>--exclude-snpid-path</code> snpID file path, remove snp according to the snpID in the file: rsnpid_file.txt <br/></p>
 <p><strong>Note:</strong> The input file in <code>-pg filter</code> mode only accepts bed format files. It is designed to generate the training set, test set, validation set, etc. from the bed intermediate files generated in all mode according to different requirements. <br/> <br/></p>
 <h3 id="recode-bed-format-data">Recode bed format data</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg filter --fileprefix genofile --recode --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg filter --fileprefix genofile_filter --recode --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt</em></p>
 <p><code>--recode</code> Change the encoding method of genotype data to additive encoding, the change rules are: 00-&gt; 0, 01-&gt; 1, 10-&gt; 1, 11-&gt; 2</p>
-<p>The output file is genofile_filter.bed / bim / fam / ped / map / geno:</p>
-<p><code>genofile_filter.bed / bim / fam / ped / map</code> is the output file after filter <br/>
-<code>genofile_filter.geno</code> is the re-encoded output file, the sampleID is within-familyID in the ped file <br/> <br/></p>
+<p>The output file is genofile_filter_filter.bed / bim / fam / ped / map / geno:</p>
+<p><code>genofile_filter_filter.bed / bim / fam / ped / map</code> is the output file after filter <br/>
+<code>genofile_filter_filter.geno</code> is the re-encoded output file, the sampleID is within-familyID in the ped file <br/> <br/></p>
 <h3 id="overall-use-of-parameters">Overall use of parameters</h3>
 <p><em>$ cropgbm -c configfile.params -o gbm_result/ -pg all --fileprefix genofile --fileformat ped --snpmaxmiss 0.10 --samplemaxmiss 0.10 --maf-max 0.05 --r2-cutoff 0.7 --recode --keep-sampleid-path ksampleid_file.txt --extract-snpid-path ksnpid_file.txt</em></p>
 <p>The output files are filename_filter.bed / bim / fam / ped / map, filename.prune.in/.prune.out/frqx/imiss/irem/lmiss, filename_filter.geno, filename_maf / het / imiss / lmiss.pdf</p>
@@ -228,36 +228,36 @@ norm_mode = z-score
 <p><strong>Input:</strong> phenotype data with at least two columns. The program treats the first column of data as a sampleID. <br/>
 <strong>Output:</strong> phefile.phe, phefile.phenorm, phefile_groupN.phe, phefile_groupN.phenorm, phefile.numphe, phefile.wordphe, phefile.word2num, phefile_scatter.pdf, phefile_plotdd.pdf <br/> <br/></p>
 <h3 id="extract-and-visualize-specific-phenotype-data">Extract and visualize specific phenotype data</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 2</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 4</em></p>
 <p><code>-pp</code> Call the preprocessed phenotype data module. <br/>
 <code>--phe-plot</code> Calls phenotype data visualization functions. <br/>
 <code>--phefile-path</code> Phenotype data file path: phefile. <br/>
 <code>--phefile-header</code> The phenotype data file contains headers. <br/>
 <code>--phefile-sep</code> Phenotype data file separator. Default is ',': ',' <br/>
-<code>--phe-column</code> The column index in the phenotype data file that stores phenotype information. This parameter is only called when the number of columns in the phenotype file is greater than 2. Default is 2: 2</p>
+<code>--phe-column</code> The column index in the phenotype data file that stores phenotype information. This parameter is only called when the number of columns in the phenotype file is greater than 2. Default is 2: 4</p>
 <p>The output files are phefile.phe, phefile_plotdd.pdf:</p>
 <p><code>phefile.phe</code> is the output file for the extracted specific phenotype data. The file has a total of two columns (sampleID, phenotype value), including the header. <br/>
 <code>phefile_plotdd.pdf</code> Phenotype data distribution histogram. The abscissa is the phenotype value, and the ordinate is the number. (fig 2) <br/></p>
 <p><img alt="fig 2" src="../img/phe_orgin_all_dd.png" />
 <center>fig 2</center><br/><br/></p>
 <h3 id="extract-phenotype-data-by-sampleid">Extract phenotype data by sampleID</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 2 --ppexsampleid-path ppexsampleid.txt</em></p>
-<p><code>--ppexsampleid-path</code> sampleID file path. The file content requirement is only a list of sampleID. The program extracts the phenotype data of the corresponding sample in the phenotype data file according to the sampleID in the file: ppexsampleid.txt</p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 4 --ppexsampleid-path ksampleid_file.txt</em></p>
+<p><code>--ppexsampleid-path</code> sampleID file path. The file content requirement is only a list of sampleID. The program extracts the phenotype data of the corresponding sample in the phenotype data file according to the sampleID in the file: ksampleid_file.txt</p>
 <p>The output file is phefile.phe:</p>
 <p><code>phefile.phe</code> is an output file that extracts specific sample phenotype data based on the sampleID. <br/> <br/></p>
 <h3 id="extract-and-visualize-the-phenotype-data-by-groupid">Extract and visualize the phenotype data by groupID</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-sep ',' --phe-column 2 --ppgroupfile-path phefile.txt --ppgroupfile-sep ',' --ppgroupid-column 3 --ppgroupfile-header</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 4 --ppgroupfile-path phefile.txt --ppgroupfile-sep ',' --ppgroupid-column 2 --ppgroupfile-header</em></p>
 <p><code>--ppgroupfile-path</code> GroupID data file path: phefile.txt <br/>
 <code>--ppgroupfile-header</code> GroupID data file contains headers. <br/>
 <code>--ppgroupfile-sep</code> GroupID data file separator. Default is ',' :, <br/>
-<code>--ppgroupid-column</code> The column index where groupID information is stored in the groupID data file. This parameter is only used when the number of ppgroupfile columns is greater than 2. Default is 2: 3</p>
+<code>--ppgroupid-column</code> The column index where groupID information is stored in the groupID data file. This parameter is only used when the number of ppgroupfile columns is greater than 2. Default is 2: 2</p>
 <p>The output files are phefile_groupN.phe, phefile_scatter.pdf:</p>
 <p><code>phefile_groupX.phe</code> is an output file that extracts phenotype data of the same group of samples according to the groupID of the sample, where X is the groupID of the sample. Generate a total of N files, each file contains only the sample belonging to the groupX and its phenotype data, where N is the number of groups. <br/>
 <code>phefile_scatter.pdf</code> displays the distribution of phenotype data in each group in the form of scatter plots and boxplots. The abscissa is the groupID and the ordinate is the phenotype value. Each point represents a sample. (fig 3) <br/></p>
 <p><img alt="fig 3" src="../img/phe_orgin_group_scatter.png" />
 <center>fig 3</center><br/><br/></p>
 <h3 id="normalize-and-visualize-phenotype-data">Normalize and visualize phenotype data</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-sep ',' --phe-column 2 --ppgroupfile-path phefile.txt --ppgroupfile-sep ',' --ppgroupid-column 3 --ppgroupfile-header --phe_norm --norm-mode z-score</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 4 --ppgroupfile-path phefile.txt --ppgroupfile-sep ',' --ppgroupid-column 2 --ppgroupfile-header --phe-norm --norm-mode z-score</em></p>
 <p><code>--phe-norm</code> calls the phenotype data normalization function. <br/>
 <code>--norm-mode</code> Normalization algorithm, optional values [0-1, max-min, z-score]. Default is z-score: z-score</p>
 <p>The output files are phefile_groupN.phenorm, phefile_scatter.pdf:</p>
@@ -266,12 +266,12 @@ norm_mode = z-score
 <p><img alt="fig 4" src="../img/phe_norm_group_scatter.png" />
 <center>fig 4</center><br/><br/></p>
 <h3 id="recoding-phenotype-data-multi-classification">Recoding phenotype data (multi-classification)</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-recode word2num --phefile-path phefile.txt --phefile-sep ',' --phe-column 2</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-recode word2num --phefile-path phefile.txt --phefile-header --phefile-sep ',' --phe-column 2</em></p>
 <p><code>--phe-recode</code> Calls the phenotype data recoding function, optional values​[word2num, num2word]. Word2num means re-encoding phenotype data into continuous non-negative integer form, and num2word means re-encoding continuous non-negative integer form into phenotype data (requires conversion table of integer and phenotype). When performing classification tasks, LightGBM only accepts consecutive integers with example labels [0, N). If the training sample comes from 5 groups, [0, 1, 2, 3, 4] is required as the label of the 5 groups, but this usually does not match the actual group name. Using this parameter, the program can implement a reversible conversion between sample labels and [0, N) consecutive integers. Provide compatible phenotype data for downstream classification tasks: word2num</p>
 <p>The output files are phefile.numphe, phefile.word2num:</p>
 <p><code>phefile.numphe</code> is an output file that recodes phenotype data into consecutive non-negative integers. Because LightGBM requires the coding form of each category to be a continuous non-negative integer starting from 0 when predicting classification problems, the actual phenotype data is difficult to meet this requirement. The program uses the phenotype data re-encoding function to achieve the above conversion. <br/>
 <code>phefile.word2num</code> is a correspondence file between phenotype data and continuous non-negative integer encoding.</p>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-recode num2word -num2wordfile-path phefile.word2num --phefile-path phefile.txt --phefile-sep ',' --phe-column 2</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -pp --phe-recode num2word --num2wordfile-path phefile.word2num --phefile-path phefile.numphe --phefile-header --phefile-sep ',' --phe-column 2</em></p>
 <p><code>--num2wordfile-path</code> Integer and phenotype corresponding to the conversion table file path. This parameter is only used when <code>--phe-recode = num2word</code>: phefile.word2num</p>
 <p>The output file is phefile.wordphe:</p>
 <p><code>phefile.wordphe</code> is an output file that recodes consecutive non-negative integers into phenotype data</p>
@@ -283,9 +283,9 @@ norm_mode = z-score
 <p><strong>Input</strong>: genotype data<br/>
 <strong>Output</strong>: filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf <br/> <br/></p>
 <h3 id="pca-kmeans-analyze-and-visualize">PCA-Kmeans analyze and visualize</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path filename_filter.geno --structure-plot --redim-mode pca --pca-explained-var 0.98 --cluster-mode kmeans --n-clusters 30</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path genofile_filter.geno --structure-plot --redim-mode pca --pca-explained-var 0.98 --cluster-mode kmeans --n-clusters 30</em></p>
 <p><code>-s</code> Calls the population structure analysis module. <br/>
-<code>--genofile-path</code> The path of the genotype data file, often the preprocessed result is used as input: filename_filter.geno <br/>
+<code>--genofile-path</code> The path of the genotype data file, often the preprocessed result is used as input: genofile_filter.geno <br/>
 <code>--structure-plot</code> Calls the population structure plot function. A total of 2 (3) scatter plots are displayed showing the results of dimensionality reduction and clustering. <br/>
 <code>--redim-mode</code> Dimension reduction algorithm, optional value [tsne, pca]. Default is pca: pca <br/>
 <code>--pca-explained-var</code> The parameter value is an integer greater than 1 or a decimal value between 0-1. When the parameter value is an integer, it indicates the dimension of the data after pca dimensionality reduction; when the parameter value is a decimal, it indicates the amount of variation that can be explained by the data after pca dimensionality reduction. This parameter is only used when <code>--redim-mode = pca</code>. Default is 0.95: 0.98 <br/>
