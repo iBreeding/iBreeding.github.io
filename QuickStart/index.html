@@ -161,40 +161,40 @@ $ cropgbm -c config_path -pg all --fileformat ped
 <h2 id="genotype-data-pre-processing">Genotype data pre-processing</h2>
 <p>The functions of the genotype data pre-processing module include: extracting the genotype data of specific sample ID and SNPID, displaying the SNP deletion rate, heterozygosity in the form of histogram and genotype recoding. Provide data and acceptable file formats for downstream analysis of the program. CropGBM currently supports ped, bed, vcf, and bcv input formats for genotype files.</p>
 <pre><code># Call the genotype data pre-processing module to count and display the missing rate and heterozygosity rate of genotype data
-$ cropgbm -c config_path -o savepath -pg all --fileprefix genofile --fileformat ped
+$ cropgbm -c config_path -o ./gbm_result/ -pg all --fileprefix genofile --fileformat ped
 </code></pre>
 <p><br/></p>
 <h2 id="phenotype-data-pre-processing">Phenotype data pre-processing</h2>
 <p>The functions of the phenotype data pre-processing module include: extracting phenotype data of specific sample ID, SNPID, groupID, phenotype normalization and phenotype recoding. It also supports displaying the distribution of data in the form of histograms or boxplots.</p>
 <pre><code># Call the phenotype data preprocessing module (-pp) for normalization (--phe-norm)
-$ cropgbm -c config_path -o savepath -pp --phe-norm
+$ cropgbm -c config_path -o ./gbm_result/ -pp --phe-norm --phefile-path phefile.txt --phefile-header --phe-column 4
 
 # Extract phenotypic data based on the groupID (--ppgroupfile-path groupfile.txt) and display it as a boxplot
-$ cropgbm -c config_path -o savepath -pp --phe-plot --phefile-path phefile.txt --ppgroupfile-path groupfile.txt
+$ cropgbm -c config_path -o ./gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phe-column 4 --ppgroupfile-path phefile.txt --ppgroupid-column 2 --ppgroupfile-header
 </code></pre>
 <p><br/></p>
 <h2 id="population-structure-analysis">Population structure analysis</h2>
 <p>The population structure analysis module can analyze the population structure of a sample based on genotype data. CropGBM supports dimensionality reduction using t-SNE or PCA methods and clustering using OPTICS or Kmeans methods. It also supports displaying the population structure of samples in the form of scatter plots.</p>
 <pre><code># Call the population structure analysis module (-s) to cluster and display samples based on genotype data (--structure-plot)
-$ cropgbm -c config_path -o savepath -s --structure-plot --genofile-path genofile --n-clusters 8
+$ cropgbm -c config_path -o ./gbm_result/ -s --structure-plot --genofile-path genofile_filter.geno --redim-mode pca --cluster-mode kmeans --n-clusters 30
 </code></pre>
 <p><br/></p>
 <h2 id="building-models-and-snp-selection">Building models and SNP selection</h2>
 <p>The model training module is mainly written based on the lightGBM algorithm. To improve the accuracy of the model, it is recommended to provide a validation set to assist in tuning. If there is no validation set, cross validation can be used to select appropriate parameter values. CropGBM select SNP based on the gain of each SNP in the training model. It also supports the use of boxplot and heatmap to show the importance of the selected SNP.</p>
 <pre><code># Cross-validation (-e -cv)
-$ cropgbm -c config_path -o savepath -e -cv --traingeno train1.geno --trainphe train1.phe
+$ cropgbm -c config_path -o ./gbm_result/ -e -cv --traingeno train.geno --trainphe train.phe
 
 # Build model (-e -t). If there is no validation set data, the --validgeno and --validphe parameters can be omitted.
-$ cropgbm -c config_path -o savepath -e -t --traingeno train1.geno --trainphe train1.phe --validgeno valid.geno --validphe valid.phe
+$ cropgbm -c config_path -o ./gbm_result/ -e -t --traingeno train.geno --trainphe train.phe --validgeno valid.geno --validphe valid.phe
 
 # SNP selection (-e -t -sf), showing changes in model prediction accuracy (--bygain-boxplot)
-$ cropgbm -c config_path -o savepath -e -t -sf --bygain-boxplot --traingeno genofile --trainphe phefile
+$ cropgbm -c config_path -o ./gbm_result/ -e -t -sf --bygain-boxplot --traingeno train.geno --trainphe train.phe
 </code></pre>
 <p><br/></p>
 <h2 id="phenotype-prediction">Phenotype prediction</h2>
 <p>The phenotype prediction module uses the trained model to predict the phenotype of the test set.</p>
 <pre><code># Phenotype prediction (-e -p)
-$ cropgbm -c config_path -o savepath -e -p --testgeno genofile --modelfile-path modelfile
+$ cropgbm -c config_path -o ./gbm_result/ -e -p --testgeno test.geno --modelfile-path train.lgb_model
 </code></pre>
               
             </div>
