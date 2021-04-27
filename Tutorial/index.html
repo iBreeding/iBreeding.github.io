@@ -281,7 +281,7 @@ norm_mode = z-score
 <li>Analysis of population structure based on genotype data</li>
 </ul>
 <p><strong>Input</strong>: genotype data<br/>
-<strong>Output</strong>: filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf <br/> <br/></p>
+<strong>Output</strong>: filename.redim, filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf <br/> <br/></p>
 <h3 id="pca-kmeans-analyze-and-visualize">PCA-Kmeans analyze and visualize</h3>
 <p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path genofile_filter.geno --structure-plot --redim-mode pca --pca-explained-var 0.98 --cluster-mode kmeans --n-clusters 30</em></p>
 <p><code>-s</code> Calls the population structure analysis module. <br/>
@@ -292,7 +292,8 @@ norm_mode = z-score
 <code>--cluster-mode</code> Clustering algorithm, optional value [kmeans, optics]. Default is kmeans: kmeans <br/>
 <code>--n-clusters</code> The number of clusters. This parameter is only used when <code>--cluster-mode = kmeans</code>: 30 (Because it is known that the dataset is obtained by crossing 207 fathers with 30 mothers)</p>
 <p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf:</p>
-<p><code>filename.cluster</code> is the output file for the clustering results. The content is two columns: sampleID, groupID. Where the groupID is '-1' means this sample is not clustered. <br/>
+<p><code>filename.redim</code> is the output file for the dimensionality reduction results. The content is in multiple columns: the first column is the sampleID, and the subsequent columns are the dimension values after dimensionality reduction. <br/>
+<code>filename.cluster</code> is the output file for the clustering results. The content is two columns: sampleID, groupID. Where the groupID is '-1' means this sample is not clustered. <br/>
 <code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. (fig 5) <br/>
 <code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groupID indicated by different colors. (fig 6) <br/></p>
 <p><img alt="fig 5" src="../img/6210_4903snp_pca_redim.png" /> 
