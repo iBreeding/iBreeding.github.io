@@ -291,7 +291,7 @@ norm_mode = z-score
 <code>--pca-explained-var</code> The parameter value is an integer greater than 1 or a decimal value between 0-1. When the parameter value is an integer, it indicates the dimension of the data after pca dimensionality reduction; when the parameter value is a decimal, it indicates the amount of variation that can be explained by the data after pca dimensionality reduction. This parameter is only used when <code>--redim-mode = pca</code>. Default is 0.95: 0.98 <br/>
 <code>--cluster-mode</code> Clustering algorithm, optional value [kmeans, optics]. Default is kmeans: kmeans <br/>
 <code>--n-clusters</code> The number of clusters. This parameter is only used when <code>--cluster-mode = kmeans</code>: 30 (Because it is known that the dataset is obtained by crossing 207 fathers with 30 mothers)</p>
-<p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf:</p>
+<p>Output files filename.redim, filename.cluster, filename_redim.pdf, filename_cluster.pdf:</p>
 <p><code>filename.redim</code> is the output file for the dimensionality reduction results. The content is in multiple columns: the first column is the sampleID, and the subsequent columns are the dimension values after dimensionality reduction. <br/>
 <code>filename.cluster</code> is the output file for the clustering results. The content is two columns: sampleID, groupID. Where the groupID is '-1' means this sample is not clustered. <br/>
 <code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. (fig 5) <br/>
@@ -341,36 +341,36 @@ norm_mode = z-score
 <p>The program allows the user to modify some parameters in the LightGBM algorithm according to the research purpose. But because there are many parameters, this tutorial does not introduce them. For related content, please refer to: Program parameters&gt; SNP selection and phenotype prediction &gt; <a href="../Parameters/#lightgbm-parameters">LightGBM parameter</a> <br/> <br/></p>
 <h3 id="cross-validation">Cross-validation</h3>
 <p>During model training, if there is no validation set to help determine whether the model is overfitting, it is recommended to use <code>-cv</code> to determine a reasonable number of trainings.</p>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -cv --traingeno train1.geno --trainphe train1.phe --cv-nfold 5 --min-detal 0.5</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -cv --traingeno train.geno --trainphe train.phe --cv-nfold 5 --min-detal 0.5</em></p>
 <p><code>-e</code> Call the SNP selection and phenotype prediction module. <br/>
 <code>-cv</code> Call the cross-validation function. <br/>
-<code>--traingeno</code> Training set genotype data file path. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. This parameter is used when <code>-t</code> or<code>-cv</code> is specified: train1.geno <br/>
+<code>--traingeno</code> Training set genotype data file path. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. This parameter is used when <code>-t</code> or<code>-cv</code> is specified: train.geno <br/>
 <code>--trainphe</code> Path to the training set sample phenotype data file. The file separator is ',', including the header, and the first column is the sampleID information. This parameter is used when <code>-t</code> or<code>-cv</code> is specified: train.phe <br/>
 <code>--cv-nfold</code> Number of folds per cross-validation. Default is 5: 5 <br/>
 <code>--min-detal</code> The minimum percentage improvement in model accuracy per training. The program returns the number of times the model is trained when the accuracy is less than this threshold and the accuracy of the model's cross-validation at this time. When <code>objective = regression</code>, the accuracy is the mean of the mse between the predicted result and the true value. Default is 0.5: 0.5 <br/> <br/></p>
 <h3 id="training-model">Training model</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -t --traingeno train1.geno --trainphe train1.phe --validgeno valid.geno --validphe valid.phe</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -t --traingeno train.geno --trainphe train.phe --validgeno valid.geno --validphe valid.phe</em></p>
 <p><code>-t</code> Call the training model function <br/>
 <code>--validgeno</code> Path to the validation set genotype data file. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. : Valid.geno <br/>
 <code>--validphe</code> The file path of the sampleID in the validation set. The file separator is ',', including the header, the first column is the sampleID: valid.phe</p>
-<p><em>$ cropgbm -c configfile.params -o gbm_result / -e -t --traingeno train2.geno --trainphe train2.phe --validgeno valid.geno --validphe valid.phe --init-model-path train1.lgb_model</em></p>
-<p><code>--init-model-path</code> Path to the starting model file. The LightGBM algorithm will continue to train based on this model. Commonly used for batch training of big data: train1.lgb_model</p>
-<p>Output file: train1.lgb_model</p>
-<p><code>train1.lgb_model</code> Model file. The tree structure of each training and the gain value of each node are recorded.</p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result / -e -t --traingeno test.geno --trainphe test.phe --validgeno valid.geno --validphe valid.phe --init-model-path train.lgb_model</em></p>
+<p><code>--init-model-path</code> Path to the starting model file. The LightGBM algorithm will continue to train based on this model. Commonly used for batch training of big data: train.lgb_model</p>
+<p>Output file: train.lgb_model</p>
+<p><code>train.lgb_model</code> Model file. The tree structure of each training and the gain value of each node are recorded.</p>
 <p>Note: The program recognizes different snp by sequence, not by column name. If the snp of the same index column is different between the two data sets, the program cannot recognize it. Therefore, the training set, test set, and validation set need to be consistent in the order of snp, otherwise the prediction result is non-reference. <br/> <br/></p>
 <h3 id="snp-selection">SNP selection</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -t -sf --bygain-boxplot --traingeno train1.geno --trainphe train1.phe --gain-min 0.05 --colorbar-max 0.6 --cv-times 6</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -t -sf --bygain-boxplot --traingeno train.geno --trainphe train.phe --gain-min 0.05 --colorbar-max 0.6 --cv-times 6</em></p>
 <p><code>-sf</code> Call the SNP selection function. This function is designed to be used in conjunction with the training model function (<code>-t</code>) and cannot be used alone. <br/>
 <code>--bygain-boxplot</code> Draws a boxplot that keeps changing as the SNP joins the model. This parameter is used when <code>-sf</code>. <br/>
 <code>--gain-min</code> calculates the total gain of each SNP in the model and uses the product of the maximum gain and<code>--gain-min</code> as the threshold. When the total gain of SNP in the model is less than the threshold, this SNP will not be selected. Default is 0.05: 0.05 <br/>
 <code>--colorbar-max</code> The product of the maximum gain of each SNP in each tree and <code>--colorbar-max</code> will be used as the maximum value of colorbar in the heat map. Default is 0.6: 0.6 <br/>
 <code>--cv-times</code> Number of repetitions for cross-validation. Default is 5: 6 <br/></p>
-<p>Output files: train1.lgb_model, train1.feature, train1_bygain.pdf, train1_random.pdf, train1_heatmap.pdf</p>
-<p><code>train1.lgb_model</code> The model file. The tree structure of each training and the gain value of each node are recorded. <br/>
-<code>train1.feature</code> The SNP gain file. The gain value of each SNP in each decision tree is recorded. <br/>
-<code>train1_bygain.pdf</code> Shows the change of model error with the addition of SNP in the form of a scatter plot. The program repeated the 5-fold cross-validation on the training set using the added SNP. The x-axis coordinate in the figure is the new snpID added in each model, which is added in order from the largest featureGain_sum value of the SNP in the train1.feature file. The y-axis coordinate is the prediction error. (fig 12) <br/>
-<code>train1_random.pdf</code> shows the change of model error with the addition of SNP in the form of boxplots. The x-axis in the figure is the number of SNP used by the model. Since the SNP used in each cross-validation is randomly extracted from all SNP, there is no snpID. The y-axis is the prediction error. (fig 13) <br/>
-<code>train1_heatmap.pdf</code> displays the gain value and change rule of each SNP in different decision tree in the form of a heatmap, that is, the information in the train1.feature file. The x-axis coordinates in the figure are the number of the SNP, and they are arranged according to the featureGain_sum value of the SNP in the train1.feature file. The y-axis coordinate is the decision tree number, and the number represents the number of times the model is trained (for example, tree20 represents the decision tree generated by the 20th training). (fig 14)</p>
+<p>Output files: train.lgb_model, train.feature, train_bygain.pdf, train_random.pdf, train_heatmap.pdf</p>
+<p><code>train.lgb_model</code> The model file. The tree structure of each training and the gain value of each node are recorded. <br/>
+<code>train.feature</code> The SNP gain file. The gain value of each SNP in each decision tree is recorded. <br/>
+<code>train_bygain.pdf</code> Shows the change of model error with the addition of SNP in the form of a scatter plot. The program repeated the 5-fold cross-validation on the training set using the added SNP. The x-axis coordinate in the figure is the new snpID added in each model, which is added in order from the largest featureGain_sum value of the SNP in the train.feature file. The y-axis coordinate is the prediction error. (fig 12) <br/>
+<code>train_random.pdf</code> shows the change of model error with the addition of SNP in the form of boxplots. The x-axis in the figure is the number of SNP used by the model. Since the SNP used in each cross-validation is randomly extracted from all SNP, there is no snpID. The y-axis is the prediction error. (fig 13) <br/>
+<code>train_heatmap.pdf</code> displays the gain value and change rule of each SNP in different decision tree in the form of a heatmap, that is, the information in the train.feature file. The x-axis coordinates in the figure are the number of the SNP, and they are arranged according to the featureGain_sum value of the SNP in the train.feature file. The y-axis coordinate is the decision tree number, and the number represents the number of times the model is trained (for example, tree20 represents the decision tree generated by the 20th training). (fig 14)</p>
 <p><img alt="fig 12" src="../img/6210_4903snp_bygain.png" /> 
 <center>fig 12</center></p>
 <p><img alt="fig 13" src="../img/6210_4903snp_random.png" /> 
@@ -383,10 +383,10 @@ norm_mode = z-score
 </ul>
 <p><strong>Input</strong>: genotype data, model files <br/>
 <strong>Output</strong>: filename.predict</p>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -p --testgeno test.geno --modelfile-path train1.lgb_model</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -e -p --testgeno test.geno --modelfile-path train.lgb_model</em></p>
 <p><code>-p</code> Call phenotype prediction function. <br/>
 <code>--testgeno</code> Path of the test set genotype data file. The file separator is ',', the first line is the snpID information, and the first column is the sampleID information. This parameter is used when <code>-p</code> is specified: test.geno <br/>
-<code>--modelfile-path</code> The path of the LightGBM model file. The program uses this model to complete the phenotype prediction of the test set. This parameter is used when <code>-p</code> is specified: train1.lgb_model</p>
+<code>--modelfile-path</code> The path of the LightGBM model file. The program uses this model to complete the phenotype prediction of the test set. This parameter is used when <code>-p</code> is specified: train.lgb_model</p>
 <p>Output file filename.predict:</p>
 <p><code>filename.predict</code> Output file of the prediction result.</p>
               
