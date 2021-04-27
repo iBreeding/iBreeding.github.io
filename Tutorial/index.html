@@ -204,7 +204,7 @@ norm_mode = z-score
 <p><code>--keep-sampleid-path</code> sampleID file path. It can only identify files whose separator is a space or a tab. Read the first two columns of data (the first column is familyID and the second column is within-familyID). Extract the sample based on the sampleID in the file: ksampleid_file.txt <br/>
 <code>--extract-snpid-path</code> snpID file path, extract snp according to the snpID in the file: ksnpid_file.txt <br/></p>
 <p><em>$ cropgbm -c configfile.params -o gbm_result / -pg filter --fileprefix genofile_filter --remove-sampleid-path rsampleid_file.txt --exclude-snpid-path rsnpid_file.txt</em></p>
-<p><code>--remove-sampleid-path</code> sampleID file path. It can only identify files with spaces or tabs. Read the first two columns of data (the first column is familyID and the second column is within-). Remove samples based on the sampleID in the file: rsampleid_file.txt <br/>
+<p><code>--remove-sampleid-path</code> sampleID file path. It can only identify files with spaces or tabs. Read the first two columns of data (the first column is familyID and the second column is within-familyID). Remove samples based on the sampleID in the file: rsampleid_file.txt <br/>
 <code>--exclude-snpid-path</code> snpID file path, remove snp according to the snpID in the file: rsnpid_file.txt <br/></p>
 <p><strong>Note:</strong> The input file in <code>-pg filter</code> mode only accepts bed format files. It is designed to generate the training set, test set, validation set, etc. from the bed intermediate files generated in all mode according to different requirements. <br/> <br/></p>
 <h3 id="recode-bed-format-data">Recode bed format data</h3>
