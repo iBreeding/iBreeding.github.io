@@ -302,15 +302,14 @@ norm_mode = z-score
 <center>fig 6</center><br/><br/></p>
 <h3 id="t-sne-optics-analyze-and-visualize">t-SNE-OPTICS analyze and visualize</h3>
 <p>The t-SNE and OPTICS algorithms are more suitable for data set with unknown population categories. PCA and Kmeans algorithms are recommended when the number of population groups is known.</p>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path filename_filter.geno --structure-plot --redim-mode tsne --window-size 50 --tsne-dim 2 --cluster-mode optics --optics-min-sample 0.025 --optics-xi 0.01 --optics-min-cluster-size 0.03</em></p>
-<p><code>--window-size</code> Sliding window size in dimension reduction. Since the calculation speed of the t-SNE algorithm decreases significantly with increasing dimensions, the program performs a preliminary dimensionality reduction on the data by sliding windows. When the number of snp is small, the parameters have a greater impact on the dimensionality reduction results. It is recommended to reduce the parameter value as the number of snp decreases. Default is 20. This parameter is only used when <code>--redim-mode = tsne</code>: 50 <br/>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path genofile_filter.geno --structure-plot --redim-mode tsne --window-size 5 --tsne-dim 2 --cluster-mode optics --optics-min-sample 0.025 --optics-xi 0.01 --optics-min-cluster-size 0.03</em></p>
+<p><code>--window-size</code> Sliding window size in dimension reduction. Since the calculation speed of the t-SNE algorithm decreases significantly with increasing dimensions, the program performs a preliminary dimensionality reduction on the data by sliding windows. When the number of snp is small, the parameters have a greater impact on the dimensionality reduction results. It is recommended to reduce the parameter value as the number of snp decreases. Default is 20. This parameter is only used when <code>--redim-mode = tsne</code>: 5 <br/>
 <code>--tsne-dim</code> Dimension of data after dimension reduction of t-SNE algorithm. This parameter is only used when <code>--redim-mode = tsne</code>. Default is 2: 2 <br/>
 <code>--optics-min-samples</code> The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the minimum number of samples required to form the core point; when the parameter value is a decimal number, it indicates the ratio of the minimum number of samples required to form the core point to the total sample number. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.025: 0.05 <br/>
 <code>--optics-xi</code> Minimum value of the reachable distance gradient required for clustering. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.05: 0.05. <br/>
 <code>--optics-min-cluster-size</code> The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the minimum number of samples required for the aggregation. When the parameter value is a decimal number, it indicates the ratio of the minimum number of samples required for the aggregation to the total number of samples. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.03: 0.06 <br/></p>
-<p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf:</p>
-<p><code>filename.cluster</code> Output file for the clustering results. The content is two columns: sampleID, groupID. A groupID of '-1' indicates that this sample is not clustered. <br/>
-<code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. (fig 7) <br/>
+<p>Output files filename.redim, filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf:</p>
+<p><code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. (fig 7) <br/>
 <code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groupIDs indicated by different colors. (fig 8) <br/>
 <code>filename_reachability.pdf</code> displays the reachable distance between each sample in the form of a scatter plot, which is only output when<code>--redim-mode = tsne</code>. Different categories are represented by different colors, and discrete points are represented by black. (fig 9) <br/></p>
 <p><img alt="fig 7" src="../img/6210_4903snp_tsne2.png" /> 
@@ -320,16 +319,14 @@ norm_mode = z-score
 <p><img alt="fig 9" src="../img/6210_4903snp_tsne2_reachability.png" />
 <center>fig 9</center><br/><br/></p>
 <h3 id="compare-the-differences-between-results-and-label">Compare the differences between results and label</h3>
-<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path filename_filter.geno --structure-plot --redim-mode tsne --window-size 50 --tsne-dim 2 --cluster-mode optics --optics-min-sample 0.025 --optics-xi 0.01 --optics-min-cluster-size 0.03 --sgroupfile-path phefile.txt --sgroupfile-sep ',' --sgroupid-column 3 --sgroupfile-header</em></p>
+<p><em>$ cropgbm -c configfile.params -o gbm_result/ -s --genofile-path genofile_filter.geno --structure-plot --redim-mode tsne --window-size 5 --tsne-dim 2 --cluster-mode optics --optics-min-sample 0.025 --optics-xi 0.01 --optics-min-cluster-size 0.03 --sgroupfile-path phefile.txt --sgroupfile-sep ',' --sgroupid-column 2 --sgroupfile-header</em></p>
 <p><code>--sgroupfile-path</code> Group label data file path: phefile.txt <br/>
 <code>--sgroupfile-sep</code> Group label data file separator: ',' <br/>
-<code>--sgroupfile-column</code> The column index in the group label data file that stores group label information. This parameter is only used when the number of --sgroupfile-path file columns is greater than 2: 3 <br/>
+<code>--sgroupfile-column</code> The column index in the group label data file that stores group label information. This parameter is only used when the number of --sgroupfile-path file columns is greater than 2: 2 <br/>
 <code>--sgroupfile-header</code> The group label data file file contains headers. <br/></p>
-<p>Output files filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf:</p>
-<p><code>filename.cluster</code> Output file for the clustering results. The content is two columns: sampleID, groupID. A groupID of '-1' indicates that this sample is not clustered. <br/>
-<code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. When the parameter <code>--sgroupfile-path</code> is assigned, the program will mark the true labels of each sample on the basis of the dimensionality reduction map, and different group are indicated by different colors. (fig 10) <br/>
-<code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groups indicated by different colors. (fig 11) <br/>
-<code>filename_reachability.pdf</code> displays the reachable distance between each sample in the form of a scatter plot, which is only output when<code>--redim-mode=tsne</code>. Different groups are represented by different colors. The discrete points are represented by black. <br/></p>
+<p>Output files filename.redim, filename.cluster, filename_redim.pdf, filename_cluster.pdf, filename_reachability.pdf:</p>
+<p><code>filename_redim.pdf</code> displays the dimensionality reduction results in the form of a scatter plot. When the parameter <code>--sgroupfile-path</code> is assigned, the program will mark the true labels of each sample on the basis of the dimensionality reduction map, and different group are indicated by different colors. (fig 10) <br/>
+<code>filename_cluster.pdf</code> displays the clustering results in the form of a scatter plot, with different groups indicated by different colors. (fig 11) <br/></p>
 <p><img alt="fig 10" src="../img/6210_4903snp_ws5_tsne2_label.png" /> 
 <center>fig 10</center></p>
 <p><img alt="fig 11" src="../img/6210_4903snp_ws5_tsne2_xi001.png" /> 
