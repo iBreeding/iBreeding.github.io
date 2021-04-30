@@ -154,10 +154,10 @@ $ source ~/.bashrc
 <h2 id="parameter-configuration">Parameter configuration</h2>
 <p>CropGBM supports two parameter assignment forms: 'configuration file' and 'command line', of which 'configuration file' is required. CropGBM will read the values of the parameters in the configuration file first, and then read the values of the parameters in the command line. When a parameter is assigned by both methods at the same time, CropGBM uses the parameter value in the command line as a reference and ignores the parameter value in the configuration file.</p>
 <pre><code># CropGBM reads the values of each parameter in the configuration file (-c config_path) and calls the genotype data preprocessing module (-pg all)
-$ cropgbm -c config_path -pg all
+$ cropgbm -c config_path -o ./gbm_result/ -pg all
 
 # CropGBM ignores the fileformat value in the configuration file and uses ped as a reference
-$ cropgbm -c config_path -pg all --fileformat ped
+$ cropgbm -c config_path -o ./gbm_result/ -pg all --fileformat ped
 </code></pre>
 <p><strong> NOTE: </strong> If the program does not work, try adding python before the program name. E.g. <em>$ python cropgbm -c config_path -pg all</em> <br/><br/></p>
 <h2 id="genotype-data-pre-processing">Genotype data pre-processing</h2>
