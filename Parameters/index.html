@@ -145,16 +145,15 @@
 <li><strong>Boolean</strong></li>
 </ul>
 <p><code>-pg</code>, <code>--preprocessed-geno</code>: Call genotype data preprocessing module, optional values [all, filter]. The 'all' indicates that the program will call the complete pre-processing module, including: statistical and visual data basics, screening out non-compliant sample individuals and SNP sites based on the deletion rate, MAF, and filling the missing data of SNP based on high-frequency genotypes, removing redundant SNP according to r ^ 2, extracting specific genotype data function of specific sample according to SNPID or sampleID. The 'filter' indicates that the program will call part of the preprocessing module, which only includes the specific extraction of specific samples according to SNPID or sampleID<br/>
-<code>--recode</code>: Recode the genotype data file, transform the encoding method from base encoding to additive encoding.</p>
 <ul>
 <li><strong>necessary</strong></li>
 </ul>
 <p><code>--fileprefix</code>: Genotype data filename prefix. <br/>
-<code>--fileformat</code>: Genotype data file format, optional values [ped, bed, vcf, bcf].</p>
 <ul>
 <li><strong>optional</strong></li>
 </ul>
-<p><code>--plink-path</code>：Specify plink path. Default is plink<br/>
+<p><code>--fileformat</code>: Genotype data file format, optional values [ped, bed]. Default is bed<br/>
+<code>--plink-path</code>：Specify plink path. Default is plink<br/>
 <code>--remove-sampleid-path</code>: The file path of the sampleID to be deleted. The format is two columns with spaces or tabs as separators. The first column is familyID and the second column is within-familyID. The program will delete the corresponding sample data in the genotype file according to sampleID. <br/>
 <code>--keep-sampleid-path</code>: The file path of the sampleID to be extracted. The file format is the same as <code>--remove-sampleid-path</code>. <br/>
 <code>--extract-snpid-path</code>: The file path of the SNPID to be extracted, the format is a list of SNPID. The program will extract the corresponding SNP data from the genotype file based on the SNPID. <br/>
@@ -168,10 +167,8 @@
 <li><strong>Boolean</strong></li>
 </ul>
 <p><code>-pp</code>,<code>--preprocessed-phe</code>: Call the phenotype data preprocessing module. <br/>
-<code>--phe-norm</code>: Call the phenotype data normalization function. <br/>
-<code>--phe-plot</code>: Call phenotype data visualization function. <br/>
-<code>--phefile-header</code>: The phenotype data file contains the header. <br/>
-<code>--ppgroupfile-header</code>: The groupID data file contains the header.</p>
+<code>--phe-norm</code>: Use z-score to normalize phenotypic data. <br/>
+<code>--phe-plot</code>: Call phenotype data visualization function.</p>
 <ul>
 <li><strong>necessary</strong></li>
 </ul>
@@ -182,22 +179,20 @@
 <p><code>--ppexsampleid-path</code>: The file path of the sampleID to be extracted. The file content is only a list of sampleID. <br/>
 <code>--ppgroupfile-path</code>: GroupID data file path. <br/>
 <code>--ppgroupfile-sep</code>: GroupID data file separator. Default is ',' <br/>
-<code>--ppgroupid-column</code>: The column index that stores the groupID. This parameter is only used when the number of ppgroupfile columns is greater than 2. Default is 2 <br/>
+<code>--ppgroupid-name</code>: The column name that stores the groupID.<br/>
 <code>--num2wordfile-path</code>: The file path of transformation table of integer and phenotype. This parameter is only used when <code>--phe-recode=num2word</code>. <br/></p>
 <ul>
 <li><strong>optional</strong></li>
 </ul>
 <p><code>--phefile-sep</code>: phenotype data file separator. Default is ',' <br/>
-<code>--phe-column</code>: The column index in the phenotype data file that stores phenotype. This parameter is only called when the number of columns in the phenotype file is greater than 2. Default is 2 <br/>
+<code>--phe-name</code>: The column name in the phenotype data file that stores phenotype. <br/>
 <code>--phe-recode</code>: Call the phenotype data recoding function, optional values [word2num, num2word]. The 'word2num' means re-encoding the phenotype data into continuous non-negative integer form. The 'num2word' means re-encoding the continuous non-negative integer form into phenotype data (need to provide a conversion table corresponding to integer and phenotype). When performing classification tasks, Lightgbm only accepts consecutive integers with example labels [0, N). If the training sample comes from 5 groups, [0, 1, 2, 3, 4] is required as the label of the 5 groups, but this usually does not match the actual groupID. Using this parameter, the program can implement a reversible conversion between sample labels and [0, N) consecutive integers. Provide compatible phenotype data for downstream classification tasks. <br/>
-<code>--norm-mode</code>: Normalization algorithm, optional values [0-1, max-min, z-score]. Default is z-score <br/> <br/></p>
 <h2 id="population-structure-analysis-module">Population structure analysis module</h2>
 <ul>
 <li><strong>Boolean</strong></li>
 </ul>
 <p><code>-s</code>,<code>--structure</code>: Call the population structure analysis module. <br/>
 <code>--structure-plot</code>: Call the population structure plot function. A total of 2 or 3 scatter plots are displayed to show the results of dimensionality reduction and clustering. <br/>
-<code>--sgroupfile-header</code>: The groupID data file contains the header.</p>
 <ul>
 <li><strong>necessary</strong></li>
 </ul>
@@ -208,15 +203,14 @@
 <p><code>--n-clusters</code>: the number of clusters. This parameter is only used when <code>--cluster-mode = kmeans</code>. <br/>
 <code>--sgroupfile-path</code>: GroupID data file path. <br/>
 <code>--sgroupfile-sep</code>: GroupID data file separator. Default is ',' <br/>
-<code>--sgroupfile-column</code>: The column index that stores groupID. This parameter is only used when the number of <code>--sgroupfile-path</code> file columns is greater than 2.</p>
+<code>--sgroupfile-name</code>: The column name that stores groupID. </p>
 <ul>
 <li><strong>optional</strong></li>
 </ul>
 <p><code>--redim-mode</code>: Dimension reduction algorithm, optional value [tsne, pca]. Default is pca <br/>
 <code>--pca-explained-var</code>: The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the dimension of the data after pca dimensionality reduction; when the parameter value is a decimal, it indicates the amount of variation that can be explained by the data after pca dimensionality reduction. Default is 0.95. This parameter is only used when <code>--redim-mode = pca</code> <br/>
 <code>--window-size</code>: Sliding window size in dimensionality reduction. Because the calculation speed of the t-SNE dimensionality reduction algorithm decreases significantly with increasing dimensions, the program performs a preliminary dimensionality reduction on the data by sliding windows. Default is 20. This parameter is only used when <code>--redim-mode = tsne</code>. <br/>
-<code>--tsne-dim</code>: The dimension of the t-SNE algorithm after dimensionality reduction. Default is 2. This parameter is only used when <code>--redim-mode = tsne</code>. <br/>
-<code>--cluster-mode</code>: Dimension reduction algorithm, optional value [tsne, pca]. Default is Kmeans.<br/>
+<code>--cluster-mode</code>: Clustering algorithm, optional value [kmeans, optics]. Default is kmeans.<br/>
 <code>--optics-min-samples</code>: The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the minimum number of samples required to form the core point; when the parameter value is a decimal number, it indicates the ratio of the minimum number of samples required to form the core point to the total sample number. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.025 <br/>
 <code>--optics-xi</code>: The minimum value of the reachable distance gradient required for the aggregation class. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.05 <br/>
 <code>--optics-min-cluster-size</code>: The parameter value is an integer greater than 1 or a decimal between 0-1. When the parameter value is an integer, it indicates the minimum number of samples required for the aggregation. When the parameter value is a decimal number, it indicates the minimum number of samples required for the aggregation. This parameter is only used when <code>--cluster-mode = optics</code>. Default is 0.03 <br/> <br/></p>
@@ -243,11 +237,11 @@
 <p><code>--validgeno</code>: The path to the genotype data file for the validation set. File format is the same as <code>--traingeno</code>. This parameter is used when <code>-t</code> is specified. <br/>
 <code>--validphe</code>: Path to the sampleID file of the validation set sample. File format is the same as <code>--traingeno</code>. This parameter is used when <code>-t</code> is specified. <br/>
 <code>--init-model-path</code>: The path of the initial model file. The LightGBM algorithm will continue to train on this model. Commonly used for batch training of big data. This parameter is used when <code>-t</code> or<code>-cv</code> is specified. <br/>
-<code>--min-detal</code>: The minimum percentage of model accuracy improvement per training. The program returns the number of times the model is trained when the accuracy is less than this threshold and the accuracy of the cross-validation of the model. When <code>objective=regression</code>, the accuracy is the mean of the mse between the predicted result and the true value. This parameter is used when <code>-cv</code> is specified. Default is 0.5 <br/>
+<code>--min-detal</code>: The minimum percentage of model accuracy improvement per training. The program returns the number of times the model is trained when the accuracy is less than this threshold and the accuracy of the cross-validation of the model. When <code>objective=regression</code>, the accuracy is the mean of the mse between the predicted result and the true value. This parameter is used when <code>-cv</code> is specified. Default is 0.05 <br/>
 <code>--cv-times</code>: Number of repetitions for cross-validation. This parameter is used when <code>-sf</code> is specified. Default is 5 <br/>
 <code>--cv-nfold</code>: The number of folds per cross-validation. This parameter is used when <code>-cv</code> is specified. Default is 5 <br/>
-<code>--gain-min</code>: calculate the total gain of each SNP in the model, and use the product of the maximum gain and<code>--gain-min</code> as the threshold. When the total gain of the SNP in the model is less than the threshold, this SNP will not be selected. This parameter is used when <code>-sf</code> and<code>--bygain-boxplot</code> are specified. Default is 0.05 <br/>
-<code>--colorbar-max</code>: The product of the maximum gain of each SNP in each tree and<code>--colorbar-max</code> will be used as the maximum value of colorbar in the heat map. This parameter is used when <code>-sf</code> is specified. Default is 0.6 <br/></p>
+<code>--min-gain</code>: calculate the total gain of each SNP in the model, and use the product of the maximum gain and<code>--min-gain</code> as the threshold. When the total gain of the SNP in the model is less than the threshold, this SNP will not be selected. This parameter is used when <code>-sf</code> and<code>--bygain-boxplot</code> are specified. Default is 0.05 <br/>
+<code>--max-colorbar</code>: The product of the maximum gain of each SNP in each tree and<code>--max-colorbar</code> will be used as the maximum value of colorbar in the heat map. This parameter is used when <code>-sf</code> is specified. Default is 0.6 <br/></p>
 <h2 id="lightgbm-parameters">LightGBM parameters</h2>
 <p><code>--learning-rate</code>: The learning rate of the model. Default is 0.1 <br/>
 <code>--num-leaves</code>: The maximum number of leaves per decision tree. Default is 10 <br/>

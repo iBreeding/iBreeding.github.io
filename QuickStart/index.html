@@ -131,9 +131,16 @@
               
                 <h1 id="quickstart">QuickStart</h1>
 <p>This section briefly introduces the functions and usage of CropGBM to help users get started quickly. For a detailed introduction to CropGBM, see <a href="../Tutorial/">Tutorial</a><br/></p>
-<p>Test data download address 1: <a href="https://gitee.com/cau-xyt/cropgbm_tutorial_data/tree/master">https://gitee.com/cau-xyt/cropgbm_tutorial_data/tree/master</a><br/>Test data download address 2: <a href="https://github.com/YuetongXU/CropGBM_Tutorial-data">https://github.com/YuetongXU/CropGBM_Tutorial-data</a></p>
+<p>Test data download address 1: <a href="https://gitee.com/cau-xyt/CropGBM-Tutorial-data">https://gitee.com/cau-xyt/CropGBM-Tutorial-data</a><br/>Test data download address 2: <a href="https://github.com/YuetongXU/CropGBM-Tutorial-data">https://github.com/YuetongXU/CropGBM-Tutorial-data</a></p>
 <p><br/></p>
 <h2 id="installation">Installation</h2>
+<h3 id="Install via Conda">Install via Conda</h3>
+<pre><code>$ conda install -c xu_cau_cab cropgbm
+</code></pre>
+<h3 id="Install via Pypi">Install via Pypi</h3>
+<pre><code>$ pip install --user cropgbm
+</code></pre>
+<h3 id="Install via Source code">Install via Source code</h3>
 <pre><code>$ tar -zxf CropGBM.tar.gz
 
 # Install Python package dependencies of CropGBM: setuptools, wheel, numpy, scipy, pandas, scikit-learn, lightgbm, matplotlib, seaborn
@@ -152,7 +159,7 @@ $ source ~/.bashrc
 </code></pre>
 <p><br/></p>
 <h2 id="parameter-configuration">Parameter configuration</h2>
-<p>CropGBM supports two parameter assignment forms: 'configuration file' and 'command line', of which 'configuration file' is required. CropGBM will read the values of the parameters in the configuration file first, and then read the values of the parameters in the command line. When a parameter is assigned by both methods at the same time, CropGBM uses the parameter value in the command line as a reference and ignores the parameter value in the configuration file.</p>
+<p>CropGBM supports two parameter assignment forms: 'configuration file' and 'command line'. CropGBM will read the values of the parameters in the configuration file first, and then read the values of the parameters in the command line. When a parameter is assigned by both methods at the same time, CropGBM uses the parameter value in the command line as a reference and ignores the parameter value in the configuration file.</p>
 <pre><code># CropGBM reads the values of each parameter in the configuration file (-c config_path) and calls the genotype data preprocessing module (-pg all)
 $ cropgbm -c config_path -o ./gbm_result/ -pg all
 
@@ -161,42 +168,42 @@ $ cropgbm -c config_path -o ./gbm_result/ -pg all --fileformat ped
 </code></pre>
 <p><strong> NOTE: </strong> If the program does not work, try adding python before the program name. E.g. <em>$ python cropgbm -c config_path -pg all</em> <br/><br/></p>
 <h2 id="genotype-data-pre-processing">Genotype data pre-processing</h2>
-<p>The functions of the genotype data pre-processing module include: extracting the genotype data of specific sample ID and SNPID, displaying the SNP deletion rate, heterozygosity in the form of histogram and genotype recoding. Provide data and acceptable file formats for downstream analysis of the program. CropGBM currently supports ped, bed, vcf, and bcv input formats for genotype files.</p>
+<p>The functions of the genotype data pre-processing module include: extracting the genotype data of specific sample ID and SNPID, displaying the SNP deletion rate, heterozygosity in the form of histogram and genotype recoding. Provide data and acceptable file formats for downstream analysis of the program. CropGBM currently supports ped, bed input formats for genotype files.</p>
 <pre><code># Call the genotype data pre-processing module to count and display the missing rate and heterozygosity rate of genotype data
-$ cropgbm -c config_path -o ./gbm_result/ -pg all --fileprefix genofile --fileformat ped
+$ cropgbm -o ./gbm_result/ -pg all --fileprefix genofile --fileformat ped
 </code></pre>
 <p><br/></p>
 <h2 id="phenotype-data-pre-processing">Phenotype data pre-processing</h2>
 <p>The functions of the phenotype data pre-processing module include: extracting phenotype data of specific sample ID, SNPID, groupID, phenotype normalization and phenotype recoding. It also supports displaying the distribution of data in the form of histograms or boxplots.</p>
 <pre><code># Call the phenotype data preprocessing module (-pp) for normalization (--phe-norm)
-$ cropgbm -c config_path -o ./gbm_result/ -pp --phe-norm --phefile-path phefile.txt --phefile-header --phe-column 4
+$ cropgbm -o ./gbm_result/ -pp --phe-norm --phefile-path phefile.txt --phe-name DTT
 
 # Extract phenotypic data based on the groupID (--ppgroupfile-path groupfile.txt) and display it as a boxplot
-$ cropgbm -c config_path -o ./gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phefile-header --phe-column 4 --ppgroupfile-path phefile.txt --ppgroupid-column 2 --ppgroupfile-header
+$ cropgbm -o ./gbm_result/ -pp --phe-plot --phefile-path phefile.txt --phe-name DTT --ppgroupfile-path phefile.txt --ppgroupid-name paternal_line
 </code></pre>
 <p><br/></p>
 <h2 id="population-structure-analysis">Population structure analysis</h2>
 <p>The population structure analysis module can analyze the population structure of a sample based on genotype data. CropGBM supports dimensionality reduction using t-SNE or PCA methods and clustering using OPTICS or Kmeans methods. It also supports displaying the population structure of samples in the form of scatter plots.</p>
 <pre><code># Call the population structure analysis module (-s) to cluster and display samples based on genotype data (--structure-plot)
-$ cropgbm -c config_path -o ./gbm_result/ -s --structure-plot --genofile-path genofile_filter.geno --redim-mode pca --cluster-mode kmeans --n-clusters 30
+$ cropgbm -o ./gbm_result/ -s --structure-plot --genofile-path genofile_filter.geno --redim-mode pca --cluster-mode kmeans --n-clusters 30
 </code></pre>
 <p><br/></p>
 <h2 id="building-models-and-snp-selection">Building models and SNP selection</h2>
 <p>The model training module is mainly written based on the lightGBM algorithm. To improve the accuracy of the model, it is recommended to provide a validation set to assist in tuning. If there is no validation set, cross validation can be used to select appropriate parameter values. CropGBM select SNP based on the gain of each SNP in the training model. It also supports the use of boxplot and heatmap to show the importance of the selected SNP.</p>
 <pre><code># Cross-validation (-e -cv)
-$ cropgbm -c config_path -o ./gbm_result/ -e -cv --traingeno train.geno --trainphe train.phe
+$ cropgbm -o ./gbm_result/ -e -cv --traingeno train.geno --trainphe train.phe
 
 # Build model (-e -t). If there is no validation set data, the --validgeno and --validphe parameters can be omitted.
-$ cropgbm -c config_path -o ./gbm_result/ -e -t --traingeno train.geno --trainphe train.phe --validgeno valid.geno --validphe valid.phe
+$ cropgbm -o ./gbm_result/ -e -t --traingeno train.geno --trainphe train.phe --validgeno valid.geno --validphe valid.phe
 
 # SNP selection (-e -t -sf), showing changes in model prediction accuracy (--bygain-boxplot)
-$ cropgbm -c config_path -o ./gbm_result/ -e -t -sf --bygain-boxplot --traingeno train.geno --trainphe train.phe
+$ cropgbm -o ./gbm_result/ -e -t -sf --bygain-boxplot --traingeno train.geno --trainphe train.phe
 </code></pre>
 <p><br/></p>
 <h2 id="phenotype-prediction">Phenotype prediction</h2>
 <p>The phenotype prediction module uses the trained model to predict the phenotype of the test set.</p>
 <pre><code># Phenotype prediction (-e -p)
-$ cropgbm -c config_path -o ./gbm_result/ -e -p --testgeno test.geno --modelfile-path train.lgb_model
+$ cropgbm -o ./gbm_result/ -e -p --testgeno test.geno --modelfile-path train.lgb_model
 </code></pre>
               
             </div>
