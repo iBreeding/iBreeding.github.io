@@ -251,7 +251,7 @@
 <code>--device-type</code> (str) : The device type called by training model, optional value ['cpu', 'gpu']. Default is 'cpu' <br/>
 <code>--max-depth</code> (int) : The maximum depth of the decision tree. If the value is &lt;= 0, there is no maximum depth limit. Default is -1 <br/>
 <code>--feature-fraction</code> (float) : The proportion of features used in training the model to the total number of features. Default is 1 <br/>
-<code>--verbosity</code> (str) : Controls the complexity of information output during model training. &lt;0: Fatal, = 0: Error (Warning), = 1: Info,&gt; 1: Debug. Default is 0 <br/>
+<code>--verbosity</code> (int) : Controls the complexity of information output during model training. &lt;0: Fatal, = 0: Error (Warning), = 1: Info,&gt; 1: Debug. Default is 0 <br/>
 <code>--num-class</code> (int) : The number of classes in the training set. This parameter is only called for multi-class tasks, that is, <code>--objective: multiclass</code>. Default is 1 <br/>
 <code>--num-boost-round</code> (int) : The number of training (iterations) of the model. Default is 100 <br/>
 <code>--early-stopping-rounds</code> (int) : This parameter should not be called only if<code>-cv</code> or <code>-t</code> has a validation set. After every N rounds of training (N is the value of the user-defined parameter), the program will calculate the prediction accuracy of the model on the validation set. If the prediction accuracy no longer improves, the model will stop training immediately. This parameter can be used to prevent model training from overfitting. Default is 20 <br/>
