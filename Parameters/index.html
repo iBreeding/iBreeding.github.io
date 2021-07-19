@@ -144,7 +144,7 @@
 <ul>
 <li><strong>Boolean</strong></li>
 </ul>
-<p><code>-pg</code>, <code>--preprocessed-geno</code>: Call genotype data preprocessing module, optional values [all, filter]. The 'all' indicates that the program will call the complete pre-processing module, including: statistical and visual data basics, screening out non-compliant sample individuals and SNP sites based on the deletion rate, MAF, and filling the missing data of SNP based on high-frequency genotypes, removing redundant SNP according to r ^ 2, extracting specific genotype data function of specific sample according to SNPID or sampleID. The 'filter' indicates that the program will call part of the preprocessing module, which only includes the specific extraction of specific samples according to SNPID or sampleID<br/>
+<p><code>-pg</code>, <code>--preprocessed-geno</code>: Call genotype data preprocessing module, optional values <code>[all, filter]</code>. The 'all' indicates that the program will call the complete pre-processing module, including: statistical and visual data basics, screening out non-compliant sample individuals and SNP sites based on the deletion rate, MAF, and filling the missing data of SNP based on high-frequency genotypes, removing redundant SNP according to r ^ 2, extracting specific genotype data function of specific sample according to SNPID or sampleID. The 'filter' indicates that the program will call part of the preprocessing module, which only includes the specific extraction of specific samples according to SNPID or sampleID<br/>
 <ul>
 <li><strong>necessary</strong></li>
 </ul>
@@ -247,8 +247,8 @@
 <code>--num-leaves</code> (int) : The maximum number of leaves per decision tree. Default is 10 <br/>
 <code>--num-threads</code> (int) : The number of CPU threads available for core module operation calls. Default is 0, which is the default number of threads in OpenMP. <br/>
 <code>--min-data-in-leaf</code> (int) : The minimum number of samples in each leaf. Default is 1 <br/>
-<code>--objective</code> (str) : The type of purpose for model training. Default is 'regression' <br/>
-<code>--device-type</code> (str) : The device type called by training model, optional value ['cpu', 'gpu']. Default is 'cpu' <br/>
+<code>--objective</code> (str) : The type of purpose for model training, optional value <code>[regression, multiclass]</code>. Default is 'regression' <br/>
+<code>--device-type</code> (str) : The device type called by training model, optional value <code>['cpu', 'gpu']</code>. Default is 'cpu' <br/>
 <code>--max-depth</code> (int) : The maximum depth of the decision tree. If the value is &lt;= 0, there is no maximum depth limit. Default is -1 <br/>
 <code>--feature-fraction</code> (float) : The proportion of features used in training the model to the total number of features. Default is 1 <br/>
 <code>--verbosity</code> (int) : Controls the complexity of information output during model training. &lt;0: Fatal, = 0: Error (Warning), = 1: Info,&gt; 1: Debug. Default is 0 <br/>
